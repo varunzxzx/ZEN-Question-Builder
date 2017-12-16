@@ -1,4 +1,4 @@
-# KWIZ - Online Quiz Portal
+# ZEN - Question Builder
 
 ## Stack Used
 - Frontend (React)
