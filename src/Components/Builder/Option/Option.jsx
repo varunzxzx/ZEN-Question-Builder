@@ -8,7 +8,7 @@ class Option extends Component {
             <div className="option">
                 <div className="btns">
                     <label>
-                        <input type="checkbox" onChange={() => {this.props.handleCheck(i)}} checked={checked === i?true:false} name="option"/>
+                        <input type="checkbox" onChange={() => {this.props.handleCheck(i)}} checked={checked.indexOf(i) !== -1?true:false} name="option"/>
                         <span className="checkmark"></span>
                     </label>
                     <img onClick={this.props.addOption} className="addbtn" src="assets/add.png" alt=""/>

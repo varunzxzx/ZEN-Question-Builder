@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import 'froala-editor/js/froala_editor.pkgd.min.js';
+
+import FroalaEditor from 'react-froala-wysiwyg';
 
 class Question extends Component {
     render() {
@@ -9,7 +12,7 @@ class Question extends Component {
                     <div className="text">T</div>
                     <div className="latex" onClick={this.props.handleLatexDisplay}>&sum;</div>
                 </div>
-                <textarea name="question" onChange={this.props.handleTextChange} className="wymeditor">&lt;p&gt;Hello, World!&lt;/p&gt;</textarea>
+                <FroalaEditor tag='textarea' model={this.props.question} onModelChange={this.props.handleTextChange}/>
             </div>
         )
     }

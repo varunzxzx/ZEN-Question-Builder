@@ -7,7 +7,7 @@ class MCQ extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            checked: -1,
+            checked: [],
             options: [0,1],
             nOptions: 2,
             displayLatex: false,
@@ -37,9 +37,8 @@ class MCQ extends Component {
         this.setState({optionsText: tmpOptionsText})
     }
 
-    handleTextChange = (e) => {
-        console.log(e.target.value);
-        this.setState({[e.target.name]: e.target.value})
+    handleTextChange = (model) => {
+        this.setState({question: model})
     }
 
     addOption = () => {
@@ -56,7 +55,13 @@ class MCQ extends Component {
     }
 
     handleCheck = (i) => {
-        this.setState({checked: i});
+        let tmpChecked = this.state.checked;
+        if(tmpChecked.indexOf(i) === -1) {
+            tmpChecked.push(i);
+        } else {
+            tmpChecked.splice(tmpChecked.indexOf(i),1);
+        }
+        this.setState({checked: tmpChecked});
     }
 
     removeOption = (i) => {
@@ -74,7 +79,7 @@ class MCQ extends Component {
     render() {
         return(
             <div>
-                <Question handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
+                <Question model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <h3 style={{padding: "10px", background: "#388287", margin: "0", color: "white"}}>Choices</h3>
                 {this.state.options.map(key => (
                     <Option handleOptions={this.handleOptions} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={this.state.checked} removeOption={this.removeOption} i={key} key={key}/>

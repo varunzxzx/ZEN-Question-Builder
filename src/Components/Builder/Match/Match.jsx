@@ -100,8 +100,8 @@ class Match extends Component {
         }
     }
     
-    handleTextChange = (e) => {
-        this.setState({[e.target.name]: e.target.value})
+    handleTextChange = (model) => {
+        this.setState({question: model})
     }
 
     handleLatexDisplay = () => {
@@ -111,7 +111,7 @@ class Match extends Component {
     render() {
         return(
             <div>
-                <Question handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
+                <Question model={this.state.question}  handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <div className="cols">
                     <div className="col1">
                     {this.state.column1.map(key => (

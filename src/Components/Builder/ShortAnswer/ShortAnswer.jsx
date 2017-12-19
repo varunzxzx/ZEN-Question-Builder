@@ -14,8 +14,8 @@ class ShortAnswer extends Component {
         this.setState({displayLatex: !this.state.displayLatex})
     }
 
-    handleTextChange = (e) => {
-        this.setState({[e.target.name]: e.target.value})
+    handleTextChange = (model) => {
+        this.setState({question: model})
     }
 
     submit = () => {
@@ -26,7 +26,7 @@ class ShortAnswer extends Component {
     render() {
         return(
             <div>
-                <Question handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
+                <Question model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <div id="container" style={{borderTop: "4px solid #388287"}}>
                     <h3>Answer</h3>
                     <div className="togglebtn">
