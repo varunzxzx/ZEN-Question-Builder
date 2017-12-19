@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import './stylesheets/latex.css';
-import './stylesheets/myscript.min.css';
-import './stylesheets/example.css'
 let MyScript = require('./myscript.min.js');
 
 class Latex extends Component {

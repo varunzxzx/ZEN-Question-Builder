@@ -2,15 +2,13 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
-const apiRoutes = require('./app/apiRoutes.js');
 
 /* Require .env */
 const dotenv = require('dotenv');
 dotenv.config();
 dotenv.load();
 
-const port = process.env.PORT || 4000
-
+const apiRoutes = require('./app/apiRoutes.js');
 
 if (process.env.NODE_ENV !== 'production') {
     const webpackDevHelper = require('./index.dev.js')
@@ -27,7 +25,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'dist')));
-app.use(express.static(path.join(__dirname, 'assets')));
+app.use(express.static(path.join(__dirname, 'public')));
 // app.use(express.static(path.join(__dirname, 'node_modules')));
 
 app.use('/api',apiRoutes);
@@ -37,7 +35,4 @@ app.get('*', function (request, response){
   response.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
 })
 
-/* Ignite server */
-app.listen(port, () => {
-  console.log("Server running at http://localhost:" + port);
-})
+module.exports = app;

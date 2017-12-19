@@ -232,3 +232,7 @@
 .match-answer input {
     margin-left: 10px;
 }
+
+.wym_skin_default .wym_dropdown ul {
+    position: static !important;
+}

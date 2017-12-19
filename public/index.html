@@ -14,6 +14,10 @@
     <link rel="stylesheet" href="main.css">
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="auto-complete.css">
+    <link rel="stylesheet" href="external/stylesheets/skin.css">
+    <link rel="stylesheet" href="external/stylesheets/latex.css">
+    <link rel="stylesheet" href="external/stylesheets/myscript.min.css">
+    <link rel="stylesheet" href="external/stylesheets/example.css">
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -41,5 +45,19 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
     <script src="/js/bundle.js"></script>
+    <script src="external/scripts/jquery.js"></script>
+    <script src="external/scripts/jquery.wymeditor.min.js"}></script>
+    <script type="text/javascript">
+        /* Here we replace each element with class 'wymeditor'
+         * (typically textareas) by a WYMeditor instance.
+         *
+         * We could use the 'html' option, to initialize the editor's content.
+         * If this option isn't set, the content is retrieved from
+         * the element being replaced.
+         */
+        $(function() {
+            $('.wymeditor').wymeditor();
+        });
+    </script>
   </body>
 </html>

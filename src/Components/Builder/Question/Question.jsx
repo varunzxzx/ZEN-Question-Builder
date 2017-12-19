@@ -9,7 +9,7 @@ class Question extends Component {
                     <div className="text">T</div>
                     <div className="latex" onClick={this.props.handleLatexDisplay}>&sum;</div>
                 </div>
-                <textarea name="question" onChange={this.props.handleTextChange} rows="8" className="custominput question"/>
+                <textarea name="question" onChange={this.props.handleTextChange} className="wymeditor">&lt;p&gt;Hello, World!&lt;/p&gt;</textarea>
             </div>
         )
     }
