@@ -1,4 +1,5 @@
 var path = require('path')
+var webpack = require('webpack')
 
 SRC_DIR = path.join(__dirname, 'src')
 DES_DIR = path.join(__dirname, 'dist')
