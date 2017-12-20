@@ -56,6 +56,7 @@ class Match extends Component {
                     data: JSON.stringify(payload)
                 })
                 .then(function (response) {
+                    alert("Posted successfully")
                     location.reload()
                 })
                 .catch(function (error) {
@@ -189,7 +190,7 @@ class Match extends Component {
                     }
                 </div>
                 <div>
-                    <div onClick={this.submit} className="submit">SUBMIT</div>
+                    <div onClick={this.submit} className="submit">{this.state.loading?"WAIT" : "SUBMIT"}</div>
                     <div className="preview">PREVIEW</div>
                 </div>
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}

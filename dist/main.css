@@ -1,0 +1,238 @@
+#change {
+    transition: 0.25s ease-in-out all;
+    cursor: pointer;
+}
+  
+#change:hover {
+    transform: rotate(360deg);
+}
+
+#taglist {
+    list-style-type: none;
+    display: inline-block;
+}
+
+#taglist li {
+    margin-right: 6px;
+    display: inline-block;
+    font-weight: 700;
+    background: #B71C1C;
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+#top {
+    padding: 10px;
+}
+  
+#type {
+    height: 35px;
+    background: none;
+    border: 2px solid #388287;
+    font-weight: 700;
+    padding: 2px 0px 2px 10px;
+    min-height: 0;
+}
+  
+#tags {
+    font-size: 1em;
+    float: right;
+    font-weight: 700;
+}
+  
+#taglist {
+    text-transform: uppercase;
+}
+  
+#hero-demo {
+    height: 30px;
+}
+
+#tags input {
+    width: 350px;
+}
+
+#container {
+    padding: 10px;
+    background: #FB8C00;
+}
+
+.custominput {
+    border: 5px solid white; 
+    -webkit-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    -moz-box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    box-shadow: 
+      inset 0 0 8px  rgba(0,0,0,0.1),
+            0 0 16px rgba(0,0,0,0.1); 
+    padding: 15px;
+    background: rgba(255,255,255,0.5);
+    margin: 0 0 10px 0;
+
+    font-size: 1.1em;
+    letter-spacing: 0.7px;
+}
+
+.togglebtn {
+    display: flex;
+    cursor: pointer;
+}
+
+.togglebtn .text {
+    width: 22px;
+    height: 19px;
+    background-color: #388287;
+    text-align: center;
+    color: white;
+}
+
+.togglebtn .latex {
+    width: 22px;
+    height: 19px;
+    background-color: white;
+    text-align: center;
+    font-size: 14px;
+}
+
+.question {
+    width: 93.5%;
+}
+
+.option {
+    background: #FB8C00;
+    padding: 10px;
+    border-bottom: 4px solid #388287;
+    display: flex;
+}
+
+.option .btns {
+    flex: 1;
+}
+
+.option .textarea {
+    flex: 19;
+    margin-left: 15px;
+}
+.btns label {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-top: 10px;
+    margin-bottom: 45px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.btns label input {
+    position: absolute;
+    opacity: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.btns label:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.btns label input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.btns label input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.btns label .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.btns .addbtn {
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.textarea textarea{
+    resize: none;
+}
+
+.submit, .preview {
+    background: #388287;
+    text-align: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1em;
+    padding: 10px;
+    cursor: pointer;
+    width: 50%;
+    float: left;
+    box-sizing: border-box;
+    transition: 0.2s ease-in-out all;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.submit:hover {
+    background: rgba(56, 130, 135, 0.7);
+}
+
+.preview:hover {
+    background: rgba(56, 130, 135, 0.7);
+}
+
+.col1, .col2 {
+    width: 50%;
+    float: left;
+}
+
+.cols:after {
+    content: ".";
+    visibility: hidden;
+    height: 0;
+    display: block;
+    clear: both;
+}
+
+.match-answer input {
+    margin-left: 10px;
+}
+
+.wym_skin_default .wym_dropdown ul {
+    position: static !important;
+}

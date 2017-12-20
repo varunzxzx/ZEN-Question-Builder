@@ -60,6 +60,7 @@ class MCQ extends Component {
                     data: JSON.stringify(payload)
                 })
                 .then(function (response) {
+                    alert("Posted successfully")
                     location.reload()
                 })
                 .catch(function (error) {
@@ -126,7 +127,7 @@ class MCQ extends Component {
                     <Option handleOptions={this.handleOptions} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={this.state.checked} removeOption={this.removeOption} i={key} key={key}/>
                 ))}
                 <div>
-                    <div onClick={this.submit} className="submit" disabled>SUBMIT</div>
+                    <div onClick={this.submit} className="submit" disabled>{this.state.loading?"WAIT" : "SUBMIT"}</div>
                     <div className="preview">PREVIEW</div>
                 </div>
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}
