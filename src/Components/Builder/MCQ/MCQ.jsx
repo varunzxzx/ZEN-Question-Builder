@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Question from '../Question/Question';
 import Option from '../Option/Option';
 import Latex from '../Latex/Latex';
+import axios from 'axios';
 
 class MCQ extends Component {
     constructor(props) {
@@ -12,7 +13,10 @@ class MCQ extends Component {
             nOptions: 2,
             displayLatex: false,
             question: "",
-            optionsText: ["",""]
+            optionsText: ["",""],
+            loading: false,
+            success: false,
+            type: 'mcq'
         }
     }
 
@@ -21,12 +25,49 @@ class MCQ extends Component {
     }
 
     submit = () => {
-        console.log("Question: " + this.state.question);
-        this.state.optionsText.map((option,i) => (
-            console.log("Option " + (i+1) + ": " + option)
-        ))
-        let i = this.state.options.indexOf(this.state.checked);
-        console.log(i+1);
+        if(!this.state.checked || !this.state.question || !this.state.optionsText) {
+            alert("Fields missing")
+        } else {
+            const correct = []
+            console.log("Question: " + this.state.question);
+            this.state.optionsText.map((option,i) => (
+                console.log("Option " + (i+1) + ": " + option)
+            ))
+            this.state.checked.map((checked,i) => {
+                if(this.state.options.indexOf(checked) !== -1) {
+                    correct.push(this.state.options.indexOf(checked))
+                }
+            })
+            console.log(this.props.tags)
+            console.log(correct);
+            if(!this.state.loading) {
+                const thiss = this;
+                this.setState({loading: true})
+                const payload = {
+                    question: this.state.question,
+                    type: this.state.type,
+                    options: this.state.optionsText,
+                    correct: correct,
+                    tags: this.props.tags
+                }
+            axios({
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                    url: '/api/create',
+                    mode: 'cors',
+                    data: JSON.stringify(payload)
+                })
+                .then(function (response) {
+                    location.reload()
+                })
+                .catch(function (error) {
+                    thiss.setState({loading: false})
+                    alert("Something went wrong");
+                });
+            }
+        }
     }
 
     handleOptions = (e) => {
@@ -85,7 +126,7 @@ class MCQ extends Component {
                     <Option handleOptions={this.handleOptions} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={this.state.checked} removeOption={this.removeOption} i={key} key={key}/>
                 ))}
                 <div>
-                    <div onClick={this.submit} className="submit">SUBMIT</div>
+                    <div onClick={this.submit} className="submit" disabled>SUBMIT</div>
                     <div className="preview">PREVIEW</div>
                 </div>
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Question from '../Question/Question';
 import Option from '../Option/Option';
 import Latex from '../Latex/Latex';
-
+import axios from 'axios';
 class Match extends Component {
     constructor(props) {
         super(props);
@@ -14,7 +14,55 @@ class Match extends Component {
             nCol2: 3,
             question: "",
             col1Text: ["","",""],
-            col2Text: ["","",""]
+            col2Text: ["","",""],
+            answers: {},
+            loading: false,
+            type: "match"
+        }
+    }
+
+    submit = () => {
+        if(!this.state.col1Text || !this.state.question || !this.state.col2Text || !this.state.col2Text) {
+            alert("Fields missing")
+        } else {
+            console.log("Question: " + this.state.question);
+            console.log("Column 1")
+            this.state.col1Text.map(col => {
+                console.log(col)
+            })
+            console.log("Column 2")
+            this.state.col2Text.map(col => {
+                console.log(col)
+            })
+            console.log(this.state.answers)
+            if(!this.state.loading) {
+                const thiss = this;
+                this.setState({loading: true})
+                const payload = {
+                    question: this.state.question,
+                    type: this.state.type,
+                    col1: this.state.col1Text,
+                    col2: this.state.col2Text,
+                    tags: this.props.tags,
+                    matchAnswer: this.state.answers
+                }
+            axios({
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                    url: '/api/create',
+                    mode: 'cors',
+                    data: JSON.stringify(payload)
+                })
+                .then(function (response) {
+                    location.reload()
+                })
+                .catch(function (error) {
+                    thiss.setState({loading: false})
+                    alert("Something went wrong");
+                });
+            }
         }
     }
 
@@ -108,19 +156,25 @@ class Match extends Component {
         this.setState({displayLatex: !this.state.displayLatex})
     }
 
+    handleAnswer = (e) => {
+        const answers = this.state.answers;
+        answers[parseInt(e.target.name,10)] = e.target.value;
+        this.setState({answers})
+    }
+
     render() {
         return(
             <div>
-                <Question model={this.state.question}  handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
+                <Question question={this.state.question}  handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <div className="cols">
                     <div className="col1">
                     {this.state.column1.map(key => (
-                        <Option handleOptions={this.handleCol1} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={-1} removeOption={this.removeOption} i={key} key={key}/>
+                        <Option handleOptions={this.handleCol1} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeOption} i={key} key={key}/>
                     ))}
                     </div>
                     <div className="col2">
                     {this.state.column2.map(key => (
-                        <Option handleOptions={this.handleCol2} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addColumn2} handleCheck={this.handleCheck} checked={-1} removeOption={this.removeColumn2} i={key} key={key}/>
+                        <Option handleOptions={this.handleCol2} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addColumn2} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeColumn2} i={key} key={key}/>
                     ))}
                     </div>
                 </div>
@@ -129,13 +183,13 @@ class Match extends Component {
                     {
                         this.state.column1.map((key,i) => (
                             <div className="match-answer" key={i}>
-                                {i+1}: <span><input type="text"/></span>
+                                {i+1}: <span><input type="text" name={i} onChange={this.handleAnswer}/></span>
                             </div>
                         ))
                     }
                 </div>
                 <div>
-                    <div className="submit">SUBMIT</div>
+                    <div onClick={this.submit} className="submit">SUBMIT</div>
                     <div className="preview">PREVIEW</div>
                 </div>
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}

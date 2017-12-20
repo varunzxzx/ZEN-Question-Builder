@@ -1,24 +1,36 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('MCQs', {
+    return queryInterface.createTable('QuestionAttrs', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      question: {
-        type: Sequelize.STRING
-      },
-      images: {
-        type: Sequelize.ARRAY(Sequelize.STRING)
-      },
       options: {
         type: Sequelize.ARRAY(Sequelize.STRING)
       },
-      answer: {
+      questionId: {
         type: Sequelize.INTEGER
+      },
+      correct: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
+      },
+      answer: {
+        type: Sequelize.STRING
+      },
+      col1: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
+      },
+      col2: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
+      },
+      matchAnswer: {
+        type: Sequelize.JSON
+      },
+      images: {
+        type: Sequelize.ARRAY(Sequelize.STRING)
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +43,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('MCQs');
+    return queryInterface.dropTable('QuestionAttrs');
   }
 };

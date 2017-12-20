@@ -9,20 +9,26 @@
     "build:prod": "webpack --colors --display-error-details --config webpack.config.js -p && cp -r public/* dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Comezo Infotech Pvt. Ltd.",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.16.2",
     "body-parser": "^1.18.1",
+    "busboy": "^0.2.14",
     "dotenv": "^4.0.0",
     "express": "^4.15.4",
     "file-loader": "^0.11.2",
     "font-awesome": "^4.7.0",
+    "gm": "^1.23.0",
+    "merge": "^1.2.0",
     "path": "^0.12.7",
+    "pg": "^7.4.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-froala-wysiwyg": "^2.7.3",
-    "sequelize": "^4.28.6"
+    "sequelize": "^4.28.6",
+    "sha1": "^1.1.1",
+    "tex-equation-to-svg": "^1.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

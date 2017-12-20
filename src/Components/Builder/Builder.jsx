@@ -89,9 +89,9 @@ class Builder extends Component{
                                 <li style={{cursor: "pointer"}} onDoubleClick={this.remove} ref={li => {this[tag] = li}} data-id={tag} key={tag}>{tag}</li>
                             ))}
                 </ul>
-                {this.state.selectedType === "MCQ" && <MCQ />}
-                {this.state.selectedType === "Short Answer" && <ShortAnswer />}
-                {this.state.selectedType === "Match the Following" && <Match />}
+                {this.state.selectedType === "MCQ" && <MCQ tags={this.state.tags}/>}
+                {this.state.selectedType === "Short Answer" && <ShortAnswer tags={this.state.tags}/>}
+                {this.state.selectedType === "Match the Following" && <Match tags={this.state.tags}/>}
             </div>
         )
     }

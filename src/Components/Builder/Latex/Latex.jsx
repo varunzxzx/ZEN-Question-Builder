@@ -5,7 +5,8 @@ class Latex extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            latex: ""
+            latex: "",
+            svg: "fefef"
         }
     }
     componentDidMount() {
@@ -18,6 +19,11 @@ class Latex extends Component {
         var convertElement = document.getElementById('convert');
         let changeState = (tmpLatex) => {
             this.setState({latex: tmpLatex});
+        }
+        let changeSVG = (svg) => {
+          let tmpSVG = `<svg x="0px" y="0px" width="630.125px" height="236px" viewBox="0 0 630 236 ">${svg.innerHTML}</svg>`
+          console.log(tmpSVG)
+          this.setState({svg: tmpSVG})
         }
         editorElement.addEventListener('changed', function (evt) {
           clearElement.disabled = !evt.detail.canClear;
@@ -52,7 +58,7 @@ class Latex extends Component {
         convertElement.addEventListener('click', function () {
           editorElement.editor.convert();
           let svg = document.querySelector("svg");
-          console.log(svg);
+          changeSVG(svg)
         });
         MyScript.register(editorElement, {
             recognitionParams: {
@@ -79,7 +85,7 @@ class Latex extends Component {
     }
     submitLatex = () => {
         if(this.state.latex) {
-            this.fnSelect("result");
+          this.fnSelect("result");
         }
         this.props.handleLatexDisplay();
     }
@@ -125,6 +131,7 @@ class Latex extends Component {
                         <button className="action-label-button" onClick={this.submitLatex} id="done">Done</button>
                     </nav>
                     <div id="editor"></div>
+                    {/* <div style={{position: "absolute",zIndex: "-9999"}} id="svg">{this.state.svg}</div> */}
                 </div>
         )
     }

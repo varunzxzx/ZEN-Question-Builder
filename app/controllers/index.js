@@ -1,5 +1,5 @@
-const MCQ = require('./mcq');
+const Question = require('./question');
 
 module.exports = {
-    MCQ
+    Question
 }
