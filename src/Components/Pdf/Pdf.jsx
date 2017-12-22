@@ -58,7 +58,7 @@ class Pdf extends Component{
             <div style={styles.container}>
                 <iframe className="pdf" style={styles.iframe} title="pdf" src={this.state.src} frameBorder="0"></iframe>
                 <div style={styles.change}>
-                    <img id="change" onClick={this.handleChange} style={styles.img} src="https://www.exchangewire.com/wp-content/uploads/2017/07/Repeat_font_awesome.svg_.png" alt="Change"/>
+                    <img id="change" onClick={this.handleChange} style={styles.img} src="assets/change.png" alt="Change"/>
                     <input style={styles.input} type="file" onChange={(e) => {this.changeFile(e)}}/>
                 </div>
             </div>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Question from '../Question/Question';
 import axios from 'axios';
+import Latex from '../Latex/Latex';
+import FroalaEditor from 'react-froala-wysiwyg';
 class ShortAnswer extends Component {
     constructor(props) {
         super(props);
@@ -9,7 +11,8 @@ class ShortAnswer extends Component {
             question: "",
             answer: "",
             loading: false,
-            type: "shortanswer"
+            type: "shortanswer",
+            preview: false
         }
     }
 
@@ -21,12 +24,12 @@ class ShortAnswer extends Component {
         this.setState({question: model})
     }
 
-    handleAnswer = (e) => {
-        this.setState({[e.target.name]: e.target.value})
+    handleAnswer = (model) => {
+        this.setState({answer: model})
     }
 
     submit = () => {
-        if(!this.state.answer || !this.state.question) {
+        if(!this.state.answer && !this.state.question) {
             alert("Fields missing")
         } else {
             if(!this.state.loading) {
@@ -59,6 +62,17 @@ class ShortAnswer extends Component {
         }
     }
 
+    preview = () => {
+        if(!this.state.question && !this.state.answer) {
+            alert("Fields missing")
+        } else {
+            this.setState({preview: true},() => {
+                document.querySelector(".question").innerHTML = this.state.question
+                document.querySelector(".answer").innerHTML = this.state.answer
+            })
+        }
+    }
+
     render() {
         return(
             <div>
@@ -69,12 +83,28 @@ class ShortAnswer extends Component {
                         <div className="text">T</div>
                         <div className="latex" onClick={this.state.handleLatexDisplay}>&sum;</div>
                     </div>
-                    <textarea onChange={this.handleAnswer} name="answer" rows="8" className="custominput question"/>
+
+                        <FroalaEditor config={{
+                            placeholderText: 'Edit Your Content Here!',
+                            imageUploadURL: '/api/upload',
+                            htmlAllowedTags: ['svg','g','text'],
+                            charCounterCount: false,
+                            toolbarButtons: ['bold', 'italic', 'underline','insertImage','subscript', 'superscript', 'align','fontSize','color','|','undo','redo']
+                        }} tag='textarea' onModelChange={this.handleAnswer}/>
+
                 </div>
                 <div>
                     <div onClick={this.submit} className="submit">{this.state.loading?"WAIT" : "SUBMIT"}</div>
-                    <div className="preview">PREVIEW</div>
+                    <div onClick={this.preview} className="preview">PREVIEW</div>
                 </div>
+                {this.state.preview && <div className="preview-display">
+                        <div style={{textAlign: "center"}}><b>Question</b></div>
+                        <div className="question"></div>
+                        <div style={{textAlign: "center"}}><b>Answer</b></div>
+                        <div className="answer"></div>
+                        <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
+                    </div>}
+                {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}
             </div>
         )
     }

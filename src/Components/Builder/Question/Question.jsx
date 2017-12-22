@@ -12,11 +12,15 @@ class Question extends Component {
                     <div className="text">T</div>
                     <div className="latex" onClick={this.props.handleLatexDisplay}>&sum;</div>
                 </div>
+
                 <FroalaEditor config={{
                     placeholderText: 'Edit Your Content Here!',
                     imageUploadURL: '/api/upload',
-                    htmlAllowedTags: ['svg','g','text']
+                    htmlAllowedTags: ['svg','g','text'],
+                    charCounterCount: false,
+                    toolbarButtons: ['bold', 'italic', 'underline','insertImage','subscript', 'superscript', 'align','fontSize','color','|','undo','redo']
                 }} tag='textarea' model={this.props.question} onModelChange={this.props.handleTextChange}/>
+
             </div>
         )
     }

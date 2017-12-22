@@ -55,7 +55,7 @@
 
 #container {
     padding: 10px;
-    background: #FB8C00;
+    background: #FFF;
 }
 
 .custominput {
@@ -103,7 +103,7 @@
 }
 
 .option {
-    background: #FB8C00;
+    background: #FFF;
     padding: 10px;
     border-bottom: 4px solid #388287;
     display: flex;
@@ -145,6 +145,7 @@
     height: 25px;
     width: 25px;
     background-color: #eee;
+    border: 1px solid #2196F3;
 }
 
 /* On mouse-over, add a grey background color */
@@ -235,4 +236,15 @@
 
 .wym_skin_default .wym_dropdown ul {
     position: static !important;
+}
+
+.preview-display {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: white;
+    z-index: 999999;
+    padding: 10px;
 }

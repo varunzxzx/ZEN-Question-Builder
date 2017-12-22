@@ -11,7 +11,7 @@ class Builder extends Component{
             types: ["MCQ","Short Answer","Match the Following"],
             src: "",
             tags: [],
-            taglist: ['Energy','Gravity','Relativity'],
+            taglist: ['Energy','Gravity','Relativity','Physics','Mathematics','Chemistry'],
             selectedType: "MCQ"
         }
     }

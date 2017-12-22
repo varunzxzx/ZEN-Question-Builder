@@ -16,7 +16,8 @@ class MCQ extends Component {
             optionsText: ["",""],
             loading: false,
             success: false,
-            type: 'mcq'
+            type: 'mcq',
+            preview: false
         }
     }
 
@@ -25,7 +26,7 @@ class MCQ extends Component {
     }
 
     submit = () => {
-        if(!this.state.checked || !this.state.question || !this.state.optionsText) {
+        if(!this.state.checked && !this.state.question && !this.state.optionsText) {
             alert("Fields missing")
         } else {
             const correct = []
@@ -71,11 +72,11 @@ class MCQ extends Component {
         }
     }
 
-    handleOptions = (e) => {
+    handleOptions = (model,e) => {
         let tmpOptions = this.state.options;
-        let i = tmpOptions.indexOf(parseInt(e.target.name,10));
+        let i = tmpOptions.indexOf(parseInt(e,10));
         let tmpOptionsText = this.state.optionsText;
-        tmpOptionsText[i] = e.target.value;
+        tmpOptionsText[i] = model;
         this.setState({optionsText: tmpOptionsText})
     }
 
@@ -118,18 +119,41 @@ class MCQ extends Component {
         }
     }
 
+    preview = () => {
+        if(!this.state.question && !this.state.optionsText) {
+            alert("Fields missing")
+        } else {
+            this.setState({preview: true},() => {
+                document.querySelector(".question").innerHTML = this.state.question
+                {this.state.optionsText.map((option,i) => {
+                    document.querySelector(`.option${i}`).innerHTML = `<b>${i+1}.</b>${option}`
+                    // return (<div className={`option${i}`}></div>)
+                })}
+            })
+        }
+    }
+
     render() {
         return(
             <div>
                 <Question model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <h3 style={{padding: "10px", background: "#388287", margin: "0", color: "white"}}>Choices</h3>
-                {this.state.options.map(key => (
-                    <Option handleOptions={this.handleOptions} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={this.state.checked} removeOption={this.removeOption} i={key} key={key}/>
+                {this.state.options.map((key,i) => (
+                    <Option handleOptions={this.handleOptions} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={this.state.checked} removeOption={this.removeOption} num={i+1} i={key} key={key}/>
                 ))}
                 <div>
                     <div onClick={this.submit} className="submit" disabled>{this.state.loading?"WAIT" : "SUBMIT"}</div>
-                    <div className="preview">PREVIEW</div>
+                    <div className="preview" onClick={this.preview}>PREVIEW</div>
                 </div>
+                {this.state.preview && <div className="preview-display">
+                        <div style={{textAlign: "center"}}><b>Question</b></div>
+                        <div className="question"></div>
+                        <div style={{textAlign: "center"}}><b>Options</b></div>
+                        {this.state.optionsText.map((option,i) => {
+                            return (<div key={i} className={`option${i}`}></div>)
+                        })}
+                        <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
+                    </div>}
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}
             </div>
         )

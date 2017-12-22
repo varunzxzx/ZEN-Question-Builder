@@ -35,7 +35,7 @@ router.post('/create',(req,res) => {
         questionAttr.options = req.body.options;
         questionAttr.correct = req.body.correct;
     } else if(question.type === "shortanswer") {
-        if(!req.body.answer) return res.status(401).json({success: false, msg: "Missing fields"})
+        if(!req.body.answer) return res.status(01).json({success: false, msg: "Missing fields"})
         questionAttr.answer = req.body.answer
     } else {
         console.log(req.body.col1)

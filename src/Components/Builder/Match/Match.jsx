@@ -3,6 +3,15 @@ import Question from '../Question/Question';
 import Option from '../Option/Option';
 import Latex from '../Latex/Latex';
 import axios from 'axios';
+
+const isEmpty = (obj) => {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
 class Match extends Component {
     constructor(props) {
         super(props);
@@ -17,12 +26,13 @@ class Match extends Component {
             col2Text: ["","",""],
             answers: {},
             loading: false,
-            type: "match"
+            type: "match",
+            preview: false
         }
     }
 
     submit = () => {
-        if(!this.state.col1Text || !this.state.question || !this.state.col2Text || !this.state.col2Text) {
+        if(!this.state.col1Text && !this.state.question && !this.state.col2Text && !isEmpty(this.state.answers)) {
             alert("Fields missing")
         } else {
             console.log("Question: " + this.state.question);
@@ -67,19 +77,19 @@ class Match extends Component {
         }
     }
 
-    handleCol1 = (e) => {
+    handleCol1 = (model,e) => {
         let tmpColumn1 = this.state.column1;
-        let i = tmpColumn1.indexOf(parseInt(e.target.name,10));
+        let i = tmpColumn1.indexOf(parseInt(e,10));
         let tmpCol1Text = this.state.col1Text;
-        tmpCol1Text[i] = e.target.value;
+        tmpCol1Text[i] = model;
         this.setState({col1Text: tmpCol1Text})
     }
 
-    handleCol2 = (e) => {
+    handleCol2 = (model,e) => {
         let tmpColumn2 = this.state.column2;
-        let i = tmpColumn2.indexOf(parseInt(e.target.name,10));
+        let i = tmpColumn2.indexOf(parseInt(e,10));
         let tmpCol2Text = this.state.col2Text;
-        tmpCol2Text[i] = e.target.value;
+        tmpCol2Text[i] = model;
         this.setState({col2Text: tmpCol2Text})
     }
 
@@ -163,19 +173,35 @@ class Match extends Component {
         this.setState({answers})
     }
 
+    preview = () => {
+        if(!this.state.col1Text && !this.state.question && !this.state.col2Text) {
+            alert("Fields missing")
+        } else {
+            this.setState({preview: true},() => {
+                document.querySelector(".question").innerHTML = this.state.question
+                {this.state.col1Text.map((option,i) => {
+                    document.querySelector(`.col1${i}`).innerHTML = `<b>${i+1}.</b>${option}`
+                })}
+                {this.state.col2Text.map((option,i) => {
+                    document.querySelector(`.col2${i}`).innerHTML = `<b>${i+1}.</b>${option}`
+                })}
+            })
+        }
+    }
+
     render() {
         return(
             <div>
                 <Question question={this.state.question}  handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <div className="cols">
                     <div className="col1">
-                    {this.state.column1.map(key => (
-                        <Option handleOptions={this.handleCol1} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeOption} i={key} key={key}/>
+                    {this.state.column1.map((key,i) => (
+                        <Option num={i+1} handleOptions={this.handleCol1} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeOption} i={key} key={key}/>
                     ))}
                     </div>
                     <div className="col2">
-                    {this.state.column2.map(key => (
-                        <Option handleOptions={this.handleCol2} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addColumn2} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeColumn2} i={key} key={key}/>
+                    {this.state.column2.map((key,i) => (
+                        <Option num={i+1} showNum={true} handleOptions={this.handleCol2} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addColumn2} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeColumn2} i={key} key={key}/>
                     ))}
                     </div>
                 </div>
@@ -191,8 +217,26 @@ class Match extends Component {
                 </div>
                 <div>
                     <div onClick={this.submit} className="submit">{this.state.loading?"WAIT" : "SUBMIT"}</div>
-                    <div className="preview">PREVIEW</div>
+                    <div onClick={this.preview} className="preview">PREVIEW</div>
                 </div>
+                {this.state.preview && <div className="preview-display">
+                        <div style={{textAlign: "center"}}><b>Question</b></div>
+                        <div className="question"></div>
+                        <div style={{textAlign: "center"}}><b>Options</b></div>
+                        <div className="cols">
+                            <div className="col1">
+                                {this.state.col1Text.map((option,i) => {
+                                    return (<div key={i} className={`col1${i}`}></div>)
+                                })}
+                            </div>
+                            <div className="col2">
+                                {this.state.col2Text.map((option,i) => {
+                                    return (<div key={i} className={`col2${i}`}></div>)
+                                })}
+                            </div>
+                        </div>
+                        <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
+                    </div>}
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}
             </div>
         )
