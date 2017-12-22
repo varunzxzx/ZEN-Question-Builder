@@ -29,7 +29,7 @@ class ShortAnswer extends Component {
     }
 
     submit = () => {
-        if(!this.state.answer && !this.state.question) {
+        if(!this.state.answer || !this.state.question) {
             alert("Fields missing")
         } else {
             if(!this.state.loading) {
@@ -63,13 +63,22 @@ class ShortAnswer extends Component {
     }
 
     preview = () => {
-        if(!this.state.question && !this.state.answer) {
+        if(!this.state.question || !this.state.answer) {
             alert("Fields missing")
         } else {
             this.setState({preview: true},() => {
                 document.querySelector(".question").innerHTML = this.state.question
                 document.querySelector(".answer").innerHTML = this.state.answer
             })
+        }
+    }
+
+    componentDidMount() {
+        if(window.location.href.indexOf("local") === -1) {
+            var elements = document.querySelectorAll(".fr-wrapper.show-placeholder > div:nth-of-type(1)");
+            for (let key in elements) {
+                elements[key].parentNode.removeChild(elements[key]);
+            }
         }
     }
 

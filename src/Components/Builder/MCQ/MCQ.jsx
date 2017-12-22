@@ -26,7 +26,7 @@ class MCQ extends Component {
     }
 
     submit = () => {
-        if(!this.state.checked && !this.state.question && !this.state.optionsText) {
+        if(!this.state.checked || !this.state.question || !this.state.optionsText) {
             alert("Fields missing")
         } else {
             const correct = []
@@ -120,7 +120,7 @@ class MCQ extends Component {
     }
 
     preview = () => {
-        if(!this.state.question && !this.state.optionsText) {
+        if(!this.state.question || !this.state.optionsText) {
             alert("Fields missing")
         } else {
             this.setState({preview: true},() => {
@@ -130,6 +130,15 @@ class MCQ extends Component {
                     // return (<div className={`option${i}`}></div>)
                 })}
             })
+        }
+    }
+
+    componentDidMount() {
+        if(window.location.href.indexOf("local") === -1) {
+            var elements = document.querySelectorAll(".fr-wrapper.show-placeholder > div:nth-of-type(1)");
+            for (let key in elements) {
+                elements[key].parentNode.removeChild(elements[key]);
+            }
         }
     }
 

@@ -5,11 +5,17 @@ import Latex from '../Latex/Latex';
 import axios from 'axios';
 
 const isEmpty = (obj) => {
+    console.log(obj)
     for(var key in obj) {
         if(obj.hasOwnProperty(key))
             return false;
     }
     return true;
+}
+
+const alpha = (num) => {
+    const APLHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    return APLHA.charAt(num-1)
 }
 
 class Match extends Component {
@@ -32,7 +38,7 @@ class Match extends Component {
     }
 
     submit = () => {
-        if(!this.state.col1Text && !this.state.question && !this.state.col2Text && !isEmpty(this.state.answers)) {
+        if(!this.state.col1Text[0] || !this.state.question || !this.state.col2Text[0] || isEmpty(this.state.answers)) {
             alert("Fields missing")
         } else {
             console.log("Question: " + this.state.question);
@@ -174,7 +180,7 @@ class Match extends Component {
     }
 
     preview = () => {
-        if(!this.state.col1Text && !this.state.question && !this.state.col2Text) {
+        if(!this.state.col1Text || !this.state.question || !this.state.col2Text) {
             alert("Fields missing")
         } else {
             this.setState({preview: true},() => {
@@ -186,6 +192,15 @@ class Match extends Component {
                     document.querySelector(`.col2${i}`).innerHTML = `<b>${i+1}.</b>${option}`
                 })}
             })
+        }
+    }
+
+    componentDidMount() {
+        if(window.location.href.indexOf("local") === -1) {
+            var elements = document.querySelectorAll(".fr-wrapper.show-placeholder > div:nth-of-type(1)");
+            for (let key in elements) {
+                elements[key].parentNode.removeChild(elements[key]);
+            }
         }
     }
 
@@ -210,7 +225,7 @@ class Match extends Component {
                     {
                         this.state.column1.map((key,i) => (
                             <div className="match-answer" key={i}>
-                                {i+1}: <span><input type="text" name={i} onChange={this.handleAnswer}/></span>
+                                {alpha(i+1)}: <span><input type="text" name={i} onChange={this.handleAnswer}/></span>
                             </div>
                         ))
                     }

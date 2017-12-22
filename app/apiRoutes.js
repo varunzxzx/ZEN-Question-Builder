@@ -2,6 +2,7 @@ const express = require('express');
 let router = express.Router();
 const tex2svg = require('tex-equation-to-svg');
 const QuestionController = require('./controllers').Question
+const TagsController = require('./controllers').Tags
 const upload = require('./routes/upload');
 router.use(function (req, res, next) {
     try {
@@ -12,6 +13,10 @@ router.use(function (req, res, next) {
     next();
 });
 
+router.get('/getTags',(req,res) => {
+    return TagsController.list(req,res)
+})
+
 router.post('/delete',(req,res) => {
     return QuestionController.delete(req.body.id,res);
 })
@@ -21,7 +26,8 @@ router.get('/list',(req,res) => {
 })
 
 router.post('/create',(req,res) => {
-    if(!req.body.question || !req.body.type ) {
+    if(!req.body.question || !req.body.type || !req.body.tags.length) {
+        console.log("returning")
         return res.status(401).json({success: false, msg: "Missing fields"})
     }
     const question = {
@@ -31,17 +37,14 @@ router.post('/create',(req,res) => {
     }
     let questionAttr = {}
     if(question.type === "mcq") {
-        if(!req.body.options || !req.body.correct) return res.status(401).json({success: false, msg: "Missing fields"})
+        if(!req.body.options.length || !req.body.correct.length) return res.status(401).json({success: false, msg: "Missing fields"})
         questionAttr.options = req.body.options;
         questionAttr.correct = req.body.correct;
     } else if(question.type === "shortanswer") {
         if(!req.body.answer) return res.status(01).json({success: false, msg: "Missing fields"})
         questionAttr.answer = req.body.answer
     } else {
-        console.log(req.body.col1)
-        console.log(req.body.col2)
-        console.log(req.body.matchAnswer)
-        if(!req.body.col1 || !req.body.col2 || !req.body.matchAnswer) return res.status(402).json({success: false, msg: "Missing fields"})
+        if(!req.body.col1.length || !req.body.col2.length) return res.status(402).json({success: false, msg: "Missing fields"})
         questionAttr.col1 = req.body.col1;
         questionAttr.col2 = req.body.col2;
         questionAttr.matchAnswer = req.body.matchAnswer
@@ -51,7 +54,6 @@ router.post('/create',(req,res) => {
     // return res.status(200).json({success: true, msg: "Abhi tk thk h", data: data})
     return QuestionController.create(question, questionAttr, tags, res);
 })
-
 
 router.post('/upload', upload);
 

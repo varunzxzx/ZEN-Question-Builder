@@ -3,6 +3,7 @@ import autoComplete from './auto-complete.min.js';
 import MCQ from './MCQ/MCQ';
 import ShortAnswer from './ShortAnswer/ShortAnswer'
 import Match from './Match/Match';
+import axios from 'axios';
 
 class Builder extends Component{
     constructor(props) {
@@ -11,9 +12,33 @@ class Builder extends Component{
             types: ["MCQ","Short Answer","Match the Following"],
             src: "",
             tags: [],
-            taglist: ['Energy','Gravity','Relativity','Physics','Mathematics','Chemistry'],
-            selectedType: "MCQ"
+            taglist: ['Gravity','Energy'],
+            selectedType: "MCQ",
+            loading: true
         }
+    }
+
+    componentWillMount() {
+        const thiss = this;
+        axios({
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+                url: '/api/getTags',
+                mode: 'cors'
+            })
+            .then(function (response) {
+                let tmpTags = []
+                for(let key in response.data.tags) {
+                    tmpTags.push(response.data.tags[key].tag)
+                }
+                console.log("fetched")
+                thiss.setState({taglist: tmpTags, loading: false});
+            })
+            .catch(function (error) {
+                console.log("error");
+            });
     }
 
     handleType = (e) => {
@@ -28,7 +53,8 @@ class Builder extends Component{
         }
     }
 
-    componentDidMount() {
+    componentDidUpdate() {
+        console.log("did mount")
         let taglist = this.state.taglist;
         new autoComplete({
             selector: '#hero-demo',
@@ -42,6 +68,7 @@ class Builder extends Component{
                 suggest(suggestions);
             },
             onSelect: (event, term, item) => {
+                term = term.toLowerCase()
                 this.handleAppend(term);
                 if(event.key !== "Enter") {
                     document.querySelector('#hero-demo').value = "";                    
@@ -54,6 +81,7 @@ class Builder extends Component{
         var code = (e.keyCode ? e.keyCode : e.which);
         if(code === 13) {
             let tmp = this.state.taglist;
+            e.target.value = e.target.value.toLowerCase()
             if(tmp.indexOf(e.target.value) === -1) {
                 tmp.push(e.target.value);
                 this.setState({taglist: tmp});
@@ -71,9 +99,11 @@ class Builder extends Component{
     }
 
     render() {
+        console.log("rendered")
         return(
             <div>
-                <div id="top">
+                {!this.state.loading && <div>
+                    <div id="top">
                     <select onChange={this.handleType} name="type" id="type">
                         {this.state.types.map(type => (
                             <option key={type} value={type}>{type}</option>
@@ -92,6 +122,8 @@ class Builder extends Component{
                 {this.state.selectedType === "MCQ" && <MCQ tags={this.state.tags}/>}
                 {this.state.selectedType === "Short Answer" && <ShortAnswer tags={this.state.tags}/>}
                 {this.state.selectedType === "Match the Following" && <Match tags={this.state.tags}/>}
+                </div>
+                }
             </div>
         )
     }

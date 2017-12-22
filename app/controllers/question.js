@@ -6,30 +6,6 @@ module.exports = {
         return Question
             .create(question)
             .then(question => {
-                tags.map(tagName => {
-                    Tags.findOne({
-                        where: {
-                            tag: tagName
-                        }
-                    })
-                    .then(tag => {
-                        console.log(tag)
-                        if(!tag) {
-                            // Tags.create({
-                            //     tag: tagName,
-                            //     questionId: question.id
-                            // }).then(tag => console.log(tag))
-                            //     .catch(err => console.log(err))
-                        } else {
-                            const tmpQuestionId = tag.questionId;
-                            tmpQuestionId.push(question.id)
-                            tag.update({
-                                questionId: tmpQuestionId
-                            })
-                        }
-                    })
-                    .catch((err) => {console.log(err)})
-                })
                 QuestionAttr.create({
                     questionId: question.id,
                     options: questionAttr.options || null,
@@ -40,7 +16,37 @@ module.exports = {
                     matchAnswer: questionAttr.matchAnswer || null,
                     images: questionAttr.images || null
                 })
-                .then(questionAttr => res.status(201).send(questionAttr))
+                .then(questionAttr => {
+                    tags.map(tagName => {
+                        Tags.findOne({
+                            where: {
+                                tag: tagName
+                            }
+                        })
+                            .then(tag => {
+                                console.log(tag);
+                                console.log(tagName)
+                                console.log(questionAttr.questionId)
+                                let tmp = []
+                                tmp.push(questionAttr.questionId)
+                                if(!tag) {
+                                    Tags.create({
+                                        tag: tagName,
+                                        questionId: tmp
+                                    }).then(tag => res.status(201).json(tag))
+                                        .catch(err => res.status(401).json({success: false, msg: err}))
+                                } else {
+                                    let tmpQuestionId = tag.questionId;
+                                    tmpQuestionId.push(question.id)
+                                    tag.update({
+                                        questionId: tmpQuestionId
+                                    })
+                                    .then(tag => res.status(201).json(tag))
+                                }
+                            })
+                            .catch((err) => res.status(401).json({success: false, msg: err}))
+                    })
+                })
             })
             .catch(error => res.status(400).send(error));
     },
