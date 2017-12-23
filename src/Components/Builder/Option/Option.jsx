@@ -30,7 +30,7 @@ class Option extends Component {
                     {/* <textarea name={i} onChange={this.props.handleOptions} rows="4" cols={this.props.col || "57"} className="custominput"/> */}
                     <div style={{ padding: "5px", boxShadow: "0 1px 3px rgba(0,0,0,.12), 0 1px 1px 1px rgba(0,0,0,.16)"}}>
                         <FroalaEditor config={{
-                            placeholderText: 'Edit Your Content Here!',
+                            placeholderText: '',
                             imageUploadURL: '/api/upload',
                             htmlAllowedTags: ['svg','g','text'],
                             toolbarInline: true,

@@ -35,6 +35,7 @@ class Latex extends Component {
           var exports = evt.detail.exports;
           let tmpLatex;
           if (exports && exports['application/x-latex']) {
+            console.log("I am latex")
             tmpLatex = exports['application/x-latex'];
           } else if (exports && exports['application/mathml+xml']) {
             tmpLatex = exports['application/mathml+xml'];
@@ -121,7 +122,7 @@ class Latex extends Component {
     render() {
         return(
                 <div id="latex">
-                    <div id="result">&#60;l&#62;{this.state.latex}&#60;&#47;l&#62;</div>
+                    <div id="result">$${this.state.latex}$$</div>
                     <nav>
                         <button className="action-button" id="clear" disabled></button>
                         <button className="action-button" id="undo" disabled></button>

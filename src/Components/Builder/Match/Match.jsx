@@ -3,6 +3,7 @@ import Question from '../Question/Question';
 import Option from '../Option/Option';
 import Latex from '../Latex/Latex';
 import axios from 'axios';
+import {InlineTex} from 'react-tex';
 
 const isEmpty = (obj) => {
     console.log(obj)
@@ -33,7 +34,8 @@ class Match extends Component {
             answers: {},
             loading: false,
             type: "match",
-            preview: false
+            preview: false,
+            id: 1
         }
     }
 
@@ -184,25 +186,44 @@ class Match extends Component {
             alert("Fields missing")
         } else {
             this.setState({preview: true},() => {
-                document.querySelector(".question").innerHTML = this.state.question
                 {this.state.col1Text.map((option,i) => {
-                    document.querySelector(`.col1${i}`).innerHTML = `<b>${i+1}.</b>${option}`
+                    // document.querySelector(`.col1${i}`).innerHTML = `<b>${alpha(i+1)}.</b>${option}`
                 })}
                 {this.state.col2Text.map((option,i) => {
-                    document.querySelector(`.col2${i}`).innerHTML = `<b>${i+1}.</b>${option}`
+                    // document.querySelector(`.col2${i}`).innerHTML = `<b>${i+1}.</b>${option}`
                 })}
             })
         }
     }
 
-    componentDidMount() {
-        if(window.location.href.indexOf("local") === -1) {
-            var elements = document.querySelectorAll(".fr-wrapper.show-placeholder > div:nth-of-type(1)");
+    removeWrapper = () => {
+        var elements = document.querySelectorAll("a[target='_blank'");
+        if(!isEmpty(elements)) {
             for (let key in elements) {
                 elements[key].parentNode.removeChild(elements[key]);
             }
         }
     }
+
+    componentDidMount() {
+        this.removeWrapper()
+    }
+
+    componentDidUpdate() {
+        this.removeWrapper()
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.id)
+    }
+
+    // componentDidUpdate() {
+    //     this.removeWrapper();
+    // }
+
+    // componentDidMount() {
+    //     this.removeWrapper();
+    // }
 
     render() {
         return(
@@ -236,17 +257,17 @@ class Match extends Component {
                 </div>
                 {this.state.preview && <div className="preview-display">
                         <div style={{textAlign: "center"}}><b>Question</b></div>
-                        <div className="question"></div>
+                        <div className="question"><InlineTex texContent={this.state.question}/></div>
                         <div style={{textAlign: "center"}}><b>Options</b></div>
                         <div className="cols">
                             <div className="col1">
                                 {this.state.col1Text.map((option,i) => {
-                                    return (<div key={i} className={`col1${i}`}></div>)
+                                    return (<div key={i} className={`col1${i}`}><b>{alpha(i+1)}.</b> <InlineTex texContent={option}/></div>)
                                 })}
                             </div>
                             <div className="col2">
                                 {this.state.col2Text.map((option,i) => {
-                                    return (<div key={i} className={`col2${i}`}></div>)
+                                    return (<div key={i} className={`col2${i}`}><b>{i+1}.</b><InlineTex texContent={option}/></div>)
                                 })}
                             </div>
                         </div>

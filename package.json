@@ -26,9 +26,9 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-froala-wysiwyg": "^2.7.3",
+    "react-tex": "^1.3.0",
     "sequelize": "^4.28.6",
-    "sha1": "^1.1.1",
-    "tex-equation-to-svg": "^1.0.1"
+    "sha1": "^1.1.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

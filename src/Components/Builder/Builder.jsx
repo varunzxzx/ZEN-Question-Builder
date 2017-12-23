@@ -12,7 +12,7 @@ class Builder extends Component{
             types: ["MCQ","Short Answer","Match the Following"],
             src: "",
             tags: [],
-            taglist: ['Gravity','Energy'],
+            taglist: [],
             selectedType: "MCQ",
             loading: true
         }
@@ -54,7 +54,6 @@ class Builder extends Component{
     }
 
     componentDidUpdate() {
-        console.log("did mount")
         let taglist = this.state.taglist;
         new autoComplete({
             selector: '#hero-demo',
@@ -99,7 +98,6 @@ class Builder extends Component{
     }
 
     render() {
-        console.log("rendered")
         return(
             <div>
                 {!this.state.loading && <div>

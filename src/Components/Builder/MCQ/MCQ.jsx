@@ -3,7 +3,14 @@ import Question from '../Question/Question';
 import Option from '../Option/Option';
 import Latex from '../Latex/Latex';
 import axios from 'axios';
-
+import {InlineTex} from 'react-tex';
+const isEmpty = (obj) => {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
 class MCQ extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +24,9 @@ class MCQ extends Component {
             loading: false,
             success: false,
             type: 'mcq',
-            preview: false
+            preview: false,
+            id: 1,
+            converted: ""
         }
     }
 
@@ -124,23 +133,51 @@ class MCQ extends Component {
             alert("Fields missing")
         } else {
             this.setState({preview: true},() => {
-                document.querySelector(".question").innerHTML = this.state.question
                 {this.state.optionsText.map((option,i) => {
-                    document.querySelector(`.option${i}`).innerHTML = `<b>${i+1}.</b>${option}`
-                    // return (<div className={`option${i}`}></div>)
+                    // document.querySelector(`.option${i}`).innerHTML = `<b>${i+1}.</b>${option}`
                 })}
             })
         }
     }
 
-    componentDidMount() {
-        if(window.location.href.indexOf("local") === -1) {
-            var elements = document.querySelectorAll(".fr-wrapper.show-placeholder > div:nth-of-type(1)");
+    removeWrapper = () => {
+        var elements = document.querySelectorAll("a[target='_blank'");
+        console.log("running..")
+        if(!isEmpty(elements)) {
             for (let key in elements) {
                 elements[key].parentNode.removeChild(elements[key]);
             }
         }
     }
+
+    componentDidMount() {
+        this.removeWrapper()
+    }
+
+    componentDidUpdate() {
+        this.removeWrapper()
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.state.id)
+    }
+
+    // removeWrapper = () => {
+    //     if(window.location.href.indexOf("local") === -1) {
+    //         var elements = document.querySelectorAll(".fr-wrapper.show-placeholder > div:nth-of-type(1)");
+    //         for (let key in elements) {
+    //             elements[key].parentNode.removeChild(elements[key]);
+    //         }
+    //     }
+    // }
+
+    // componentDidUpdate() {
+    //     this.removeWrapper();
+    // }
+
+    // componentDidMount() {
+    //     this.removeWrapper();
+    // }
 
     render() {
         return(
@@ -156,10 +193,10 @@ class MCQ extends Component {
                 </div>
                 {this.state.preview && <div className="preview-display">
                         <div style={{textAlign: "center"}}><b>Question</b></div>
-                        <div className="question"></div>
+                        <div className="question"><InlineTex texContent={this.state.question}/></div>
                         <div style={{textAlign: "center"}}><b>Options</b></div>
                         {this.state.optionsText.map((option,i) => {
-                            return (<div key={i} className={`option${i}`}></div>)
+                            return (<div key={i} className={`option${i}`}><b>{i+1}.</b> <InlineTex texContent={option}/></div>)
                         })}
                         <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
                     </div>}
