@@ -1,19 +1,18 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var QuestionAttr = sequelize.define('QuestionAttr', {
-    options: DataTypes.ARRAY(DataTypes.STRING),
-    correct: DataTypes.ARRAY(DataTypes.STRING),
-    questionId: DataTypes.INTEGER,
+    options: DataTypes.STRING,
+    correct: DataTypes.STRING,
     answer: DataTypes.STRING,
-    col1: DataTypes.ARRAY(DataTypes.STRING),
-    col2: DataTypes.ARRAY(DataTypes.STRING),
+    col1: DataTypes.STRING,
+    col2: DataTypes.STRING,
     matchAnswer: DataTypes.JSON,
-    images: DataTypes.ARRAY(DataTypes.STRING)
+    images: DataTypes.STRING
   });
 
   QuestionAttr.associate = (models) => {
         QuestionAttr.belongsTo(models.Question, {
-            foreignKey: 'questionId',
+            foreignKey: 'question_id',
             onDelete: 'CASCADE',
         });
     }
