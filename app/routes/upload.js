@@ -1,6 +1,6 @@
 var fs = require('fs');
 const path = require('path')
-var FroalaEditor = require('wysiwyg-editor/lib/froalaEditor.js');
+var FroalaEditor = require('../externals/wysiwyg-editor/lib/froalaEditor.js');
 
 let upload = (req,res) => {
     FroalaEditor.Image.upload(req, '../../public/uploads/', function(err, data) {
