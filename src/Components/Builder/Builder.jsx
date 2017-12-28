@@ -70,7 +70,9 @@ class Builder extends Component{
                 term = term.toLowerCase()
                 this.handleAppend(term);
                 if(event.key !== "Enter") {
-                    document.querySelector('#hero-demo').value = "";                    
+                    document.querySelector('#hero-demo').value = "";
+                    let element = document.querySelector('.autocomplete-suggestion.selected.selected')
+                    element.parentNode.removeChild(element);                    
                 }
             }
         })
