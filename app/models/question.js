@@ -3,7 +3,15 @@ module.exports = (sequelize, DataTypes) => {
   var Question = sequelize.define('Question', {
     question: DataTypes.STRING,
     type: DataTypes.STRING,
-    images: DataTypes.STRING,
+    images: {
+        type: DataTypes.STRING,
+        // get: function () {
+        //     return this.getDataValue('images').split(';;')
+        // },
+        // set: function (val) {
+        //     this.setDataValue('images',val.join(';;'));
+        // }
+    },
     published: {
         type: DataTypes.BOOLEAN,
         defaultValue: true

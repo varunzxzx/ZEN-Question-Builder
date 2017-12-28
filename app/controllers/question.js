@@ -58,18 +58,21 @@ module.exports = {
                         addTags(0,questionAttr.id,tags,() => res.status(201).json({success: true,msg: "Successfully posted"}))
                     })
             })
-            .catch(error => res.status(400).send(error));
+            .catch(error => {console.log(error)});
     },
     list(req, res) {
         return Question
             .findAll({
+                where: {
+                    type: req.body.type,
+                },
                 include: [{
                     model: QuestionAttr,
                     as: 'questionAttrs',
                 }],
             })
             .then(todos => res.status(200).send(todos))
-            .catch(error => res.status(400).send(error));
+            .catch(error => {console.log(error);return res.status(400).send(error)});
     },
     delete(id,res) {
         return Question
