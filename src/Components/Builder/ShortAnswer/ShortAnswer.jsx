@@ -43,13 +43,41 @@ class ShortAnswer extends Component {
         if(!this.state.answer || !this.state.question) {
             alert("Fields missing")
         } else {
+            let question = this.state.question;
+            let images = {};
+            let imgN = 0;
+
+            while(question.indexOf("<img") !== -1) {
+                let start = question.indexOf("<img");
+                let end = question.indexOf("\">")
+                console.log(start)
+                console.log(end)
+                console.log(question.substring(start,end+2))
+
+                let src = "",ch = question.substring(question.indexOf("src=\"")+5,question.indexOf("src=\"")+6);
+                console.log(`ch= ${ch}`)
+                let i = 5;
+                while(ch !== "\"") {
+                    src = src + ch;
+                    i++;
+                    ch = question.substring(question.indexOf("src=\"")+i,question.indexOf("src=\"")+i+1);
+                }
+                console.log(src)
+
+                images[imgN] = src;
+                question = question.replace(question.substring(start,end+2),`@@${imgN}@@`)
+                imgN++;
+                console.log(question)
+            }
+            question = question.replace(/&nbsp;/g," ")
+            let answer = this.state.answer.replace(/&nbsp;/g," ")
             if(!this.state.loading) {
                 const thiss = this;
                 this.setState({loading: true})
                 const payload = {
-                    question: this.state.question,
+                    question: question,
                     type: this.state.type,
-                    answer: this.state.answer,
+                    answer: answer,
                     tags: this.props.tags
                 }
             axios({

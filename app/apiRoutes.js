@@ -7,8 +7,15 @@ router.use(function (req, res, next) {
     try {
         req.body = JSON.parse(Object.keys(req.body)[0]);
     } catch (err) {
+        console.log(err)
         req.body = req.body;
     }
+    next();
+});
+
+router.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
@@ -31,8 +38,10 @@ router.post('/list',(req,res) => {
 router.post('/create',(req,res) => {
     if(!req.body.question || !req.body.type || !req.body.tags.length) {
         console.log("returning")
-        return res.status(401).json({success: false, msg: "Missing fields"})
+        console.log(req.body)
+        return res.status(401).json({success: false, msg: "Missing fields", req: req.body})
     }
+    console.log(req.body)
     const question = {
         question: req.body.question,
         type: req.body.type,
@@ -52,7 +61,7 @@ router.post('/create',(req,res) => {
         questionAttr.col2 = req.body.col2;
         questionAttr.matchAnswer = req.body.matchAnswer
     }
-    questionAttr.images = req.body.images
+    questionAttr.images = req.body.imagesAns
     const tags = req.body.tags;
     // return res.status(200).json({success: true, msg: "Abhi tk thk h", data: data})
     return QuestionController.create(question, questionAttr, tags, res);

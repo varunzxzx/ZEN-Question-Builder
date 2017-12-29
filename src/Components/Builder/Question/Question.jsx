@@ -16,7 +16,6 @@ class Question extends Component {
                 <FroalaEditor config={{
                     placeholderText: 'Edit Your Content Here!',
                     imageUploadURL: '/api/upload',
-                    htmlAllowedTags: ['svg','g','text'],
                     charCounterCount: false,
                     toolbarButtons: ['bold', 'italic', 'underline','insertImage','subscript', 'superscript', 'align','fontSize','color','|','undo','redo']
                 }} tag='textarea' model={this.props.question} onModelChange={this.props.handleTextChange}/>

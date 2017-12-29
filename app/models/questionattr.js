@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     matchAnswer: DataTypes.JSON,
     images: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         // get: function () {
         //     return this.getDataValue('images').split(';;')
         // },

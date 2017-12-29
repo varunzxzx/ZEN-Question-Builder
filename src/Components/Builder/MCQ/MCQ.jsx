@@ -39,26 +39,55 @@ class MCQ extends Component {
             alert("Fields missing")
         } else {
             const correct = []
-            console.log("Question: " + this.state.question);
-            this.state.optionsText.map((option,i) => (
-                console.log("Option " + (i+1) + ": " + option)
-            ))
+            let question = this.state.question;
+            let images = {};
+            let imgN = 0;
+
+            while(question.indexOf("<img") !== -1) {
+                let start = question.indexOf("<img");
+                let end = question.indexOf("\">")
+                console.log(start)
+                console.log(end)
+                console.log(question.substring(start,end+2))
+
+                let src = "",ch = question.substring(question.indexOf("src=\"")+5,question.indexOf("src=\"")+6);
+                console.log(`ch= ${ch}`)
+                let i = 5;
+                while(ch !== "\"") {
+                    src = src + ch;
+                    i++;
+                    ch = question.substring(question.indexOf("src=\"")+i,question.indexOf("src=\"")+i+1);
+                }
+                console.log(src)
+
+                images[imgN] = src;
+                question = question.replace(question.substring(start,end+2),`@@${imgN}@@`)
+                imgN++;
+                console.log(question)
+            }
+
+            question = question.replace(/&nbsp;/g," ")
+            let options = this.state.optionsText;
+            options.map((option,i) => {
+                options[i] = option.replace(/&nbsp;/g," ")
+            })
+            
             this.state.checked.map((checked,i) => {
                 if(this.state.options.indexOf(checked) !== -1) {
                     correct.push(this.state.options.indexOf(checked))
                 }
             })
-            console.log(this.props.tags)
-            console.log(correct);
+            console.log(images)
             if(!this.state.loading) {
                 const thiss = this;
                 this.setState({loading: true})
                 const payload = {
-                    question: this.state.question,
+                    question: question,
                     type: this.state.type,
-                    options: this.state.optionsText,
+                    options: options,
                     correct: correct,
-                    tags: this.props.tags
+                    tags: this.props.tags,
+                    images: images
                 }
             axios({
                 method: 'POST',
@@ -75,6 +104,7 @@ class MCQ extends Component {
                 })
                 .catch(function (error) {
                     thiss.setState({loading: false})
+                    console.log(error)
                     alert("Something went wrong");
                 });
             }

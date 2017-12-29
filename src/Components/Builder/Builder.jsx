@@ -5,6 +5,14 @@ import ShortAnswer from './ShortAnswer/ShortAnswer'
 import Match from './Match/Match';
 import axios from 'axios';
 
+const isEmpty = (obj) => {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
+
 class Builder extends Component{
     constructor(props) {
         super(props);
@@ -71,8 +79,13 @@ class Builder extends Component{
                 this.handleAppend(term);
                 if(event.key !== "Enter") {
                     document.querySelector('#hero-demo').value = "";
-                    let element = document.querySelector('.autocomplete-suggestion.selected.selected')
-                    element.parentNode.removeChild(element);                    
+                    let elements = document.querySelectorAll('.autocomplete-suggestion')
+                    console.log(elements)
+                    if(!isEmpty(elements)) {
+                        for (let key in elements) {
+                            elements[key].parentNode.removeChild(elements[key]);
+                        }
+                    }
                 }
             }
         })
@@ -89,6 +102,13 @@ class Builder extends Component{
                 this.handleAppend(e.target.value);
             }
             document.querySelector('#hero-demo').value = "";
+            let elements = document.querySelectorAll('.autocomplete-suggestion')
+            console.log(elements)
+            if(!isEmpty(elements)) {
+                for (let key in elements) {
+                    elements[key].parentNode.removeChild(elements[key]);
+                }
+            }
         }
     }
 

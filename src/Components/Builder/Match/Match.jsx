@@ -43,13 +43,48 @@ class Match extends Component {
         if(!this.state.col1Text[0] || !this.state.question || !this.state.col2Text[0] || isEmpty(this.state.answers)) {
             alert("Fields missing")
         } else {
-            console.log("Question: " + this.state.question);
+            let question = this.state.question;
+            let images = {};
+            let imgN = 0;
+
+            while(question.indexOf("<img") !== -1) {
+                let start = question.indexOf("<img");
+                let end = question.indexOf("\">")
+                console.log(start)
+                console.log(end)
+                console.log(question.substring(start,end+2))
+
+                let src = "",ch = question.substring(question.indexOf("src=\"")+5,question.indexOf("src=\"")+6);
+                console.log(`ch= ${ch}`)
+                let i = 5;
+                while(ch !== "\"") {
+                    src = src + ch;
+                    i++;
+                    ch = question.substring(question.indexOf("src=\"")+i,question.indexOf("src=\"")+i+1);
+                }
+                console.log(src)
+
+                images[imgN] = src;
+                question = question.replace(question.substring(start,end+2),`@@${imgN}@@`)
+                imgN++;
+                console.log(question)
+            }
+            question = question.replace(/&nbsp;/g," ")
+            let col1Text = this.state.col1Text;
+            col1Text.map((option,i) => {
+                col1Text[i] = option.replace(/&nbsp;/g," ")
+            })
+            let col2Text = this.state.col2Text;
+            col2Text.map((option,i) => {
+                col2Text[i] = option.replace(/&nbsp;/g," ")
+            })
+            console.log("Question: " + question);
             console.log("Column 1")
-            this.state.col1Text.map(col => {
+            col1Text.map(col => {
                 console.log(col)
             })
             console.log("Column 2")
-            this.state.col2Text.map(col => {
+            col2Text.map(col => {
                 console.log(col)
             })
             console.log(this.state.answers)
@@ -57,10 +92,10 @@ class Match extends Component {
                 const thiss = this;
                 this.setState({loading: true})
                 const payload = {
-                    question: this.state.question,
+                    question: question,
                     type: this.state.type,
-                    col1: this.state.col1Text,
-                    col2: this.state.col2Text,
+                    col1: col1Text,
+                    col2: col2Text,
                     tags: this.props.tags,
                     matchAnswer: this.state.answers
                 }
