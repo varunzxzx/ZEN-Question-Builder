@@ -68,7 +68,30 @@ class MCQ extends Component {
 
             question = question.replace(/&nbsp;/g," ")
             let options = this.state.optionsText;
+            let imagesAns = {}
+            let imgAnsN = 0
             options.map((option,i) => {
+                while(option.indexOf("<img") !== -1) {
+                    let start = option.indexOf("<img");
+                    let end = option.indexOf("\">")
+                    console.log(start)
+                    console.log(end)
+                    console.log(option.substring(start,end+2))
+    
+                    let src = "",ch = option.substring(option.indexOf("src=\"")+5,option.indexOf("src=\"")+6);
+                    console.log(`ch= ${ch}`)
+                    let i = 5;
+                    while(ch !== "\"") {
+                        src = src + ch;
+                        i++;
+                        ch = option.substring(option.indexOf("src=\"")+i,option.indexOf("src=\"")+i+1);
+                    }
+                    
+                    imagesAns[imgAnsN] = src;
+                    option = option.replace(option.substring(start,end+2),`@@${imgAnsN}@@`)
+                    imgAnsN++;
+                    console.log(option)
+                }
                 options[i] = option.replace(/&nbsp;/g," ")
             })
             
@@ -87,7 +110,8 @@ class MCQ extends Component {
                     options: options,
                     correct: correct,
                     tags: this.props.tags,
-                    images: images
+                    images: images,
+                    imagesAns: imagesAns
                 }
             axios({
                 method: 'POST',

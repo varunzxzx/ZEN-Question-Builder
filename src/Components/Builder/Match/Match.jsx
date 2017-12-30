@@ -70,12 +70,56 @@ class Match extends Component {
                 console.log(question)
             }
             question = question.replace(/&nbsp;/g," ")
+            let imagesAns = {}
+            let imgAnsN = 0
             let col1Text = this.state.col1Text;
             col1Text.map((option,i) => {
+                while(option.indexOf("<img") !== -1) {
+                    let start = option.indexOf("<img");
+                    let end = option.indexOf("\">")
+                    console.log(start)
+                    console.log(end)
+                    console.log(option.substring(start,end+2))
+    
+                    let src = "",ch = option.substring(option.indexOf("src=\"")+5,option.indexOf("src=\"")+6);
+                    console.log(`ch= ${ch}`)
+                    let i = 5;
+                    while(ch !== "\"") {
+                        src = src + ch;
+                        i++;
+                        ch = option.substring(option.indexOf("src=\"")+i,option.indexOf("src=\"")+i+1);
+                    }
+                    
+                    imagesAns[imgAnsN] = src;
+                    option = option.replace(option.substring(start,end+2),`@@${imgAnsN}@@`)
+                    imgAnsN++;
+                    console.log(option)
+                }
                 col1Text[i] = option.replace(/&nbsp;/g," ")
             })
             let col2Text = this.state.col2Text;
             col2Text.map((option,i) => {
+                while(option.indexOf("<img") !== -1) {
+                    let start = option.indexOf("<img");
+                    let end = option.indexOf("\">")
+                    console.log(start)
+                    console.log(end)
+                    console.log(option.substring(start,end+2))
+    
+                    let src = "",ch = option.substring(option.indexOf("src=\"")+5,option.indexOf("src=\"")+6);
+                    console.log(`ch= ${ch}`)
+                    let i = 5;
+                    while(ch !== "\"") {
+                        src = src + ch;
+                        i++;
+                        ch = option.substring(option.indexOf("src=\"")+i,option.indexOf("src=\"")+i+1);
+                    }
+                    
+                    imagesAns[imgAnsN] = src;
+                    option = option.replace(option.substring(start,end+2),`@@${imgAnsN}@@`)
+                    imgAnsN++;
+                    console.log(option)
+                }
                 col2Text[i] = option.replace(/&nbsp;/g," ")
             })
             console.log("Question: " + question);
@@ -97,7 +141,8 @@ class Match extends Component {
                     col1: col1Text,
                     col2: col2Text,
                     tags: this.props.tags,
-                    matchAnswer: this.state.answers
+                    matchAnswer: this.state.answers,
+                    imagesAns: imagesAns
                 }
             axios({
                 method: 'POST',

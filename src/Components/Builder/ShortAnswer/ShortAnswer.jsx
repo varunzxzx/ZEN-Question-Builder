@@ -70,7 +70,31 @@ class ShortAnswer extends Component {
                 console.log(question)
             }
             question = question.replace(/&nbsp;/g," ")
-            let answer = this.state.answer.replace(/&nbsp;/g," ")
+            let answer = this.state.answer;
+            let imagesAns = {}
+            let imgAnsN = 0
+            while(answer.indexOf("<img") !== -1) {
+                let start = answer.indexOf("<img");
+                let end = answer.indexOf("\">")
+                console.log(start)
+                console.log(end)
+                console.log(answer.substring(start,end+2))
+
+                let src = "",ch = answer.substring(answer.indexOf("src=\"")+5,answer.indexOf("src=\"")+6);
+                console.log(`ch= ${ch}`)
+                let i = 5;
+                while(ch !== "\"") {
+                    src = src + ch;
+                    i++;
+                    ch = answer.substring(answer.indexOf("src=\"")+i,answer.indexOf("src=\"")+i+1);
+                }
+                
+                imagesAns[imgAnsN] = src;
+                answer = answer.replace(answer.substring(start,end+2),`@@${imgAnsN}@@`)
+                imgAnsN++;
+                console.log(answer)
+            }
+            answer = answer.replace(/&nbsp;/g," ")
             if(!this.state.loading) {
                 const thiss = this;
                 this.setState({loading: true})
@@ -78,7 +102,8 @@ class ShortAnswer extends Component {
                     question: question,
                     type: this.state.type,
                     answer: answer,
-                    tags: this.props.tags
+                    tags: this.props.tags,
+                    imagesAns: imagesAns
                 }
             axios({
                 method: 'POST',
