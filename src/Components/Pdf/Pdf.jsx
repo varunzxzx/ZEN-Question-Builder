@@ -9,6 +9,14 @@ class Pdf extends Component{
         }
     }
 
+    componentDidMount() {
+        let input = document.querySelector('#file-input');
+        console.log(input)
+        input.onchange = (e) => {
+            window.alert(e.target.value)
+        }
+    }
+
     handleChange = () => {
         this.setState({display: !this.state.display})
     }
