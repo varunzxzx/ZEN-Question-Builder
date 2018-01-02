@@ -18,7 +18,7 @@ class Question extends Component {
                     imageUploadURL: '/api/upload',
                     charCounterCount: false,
                     toolbarButtons: ['bold', 'italic', 'underline','insertImage','subscript', 'superscript', 'align','fontSize','color','|','undo','redo']
-                }} tag='textarea' model={this.props.question} onModelChange={this.props.handleTextChange}/>
+                }} tag='textarea' model={this.props.model} onModelChange={this.props.handleTextChange}/>
 
             </div>
         )

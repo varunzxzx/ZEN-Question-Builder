@@ -26,6 +26,10 @@ class Builder extends Component{
         }
     }
 
+    reInit = () => {
+        this.setState({tags: []})
+    }
+
     componentWillMount() {
         const thiss = this;
         axios({
@@ -139,9 +143,9 @@ class Builder extends Component{
                                 <li style={{cursor: "pointer"}} onDoubleClick={this.remove} ref={li => {this[tag] = li}} data-id={tag} key={tag}>{tag}</li>
                             ))}
                 </ul>
-                {this.state.selectedType === "MCQ" && <MCQ tags={this.state.tags}/>}
-                {this.state.selectedType === "Short Answer" && <ShortAnswer tags={this.state.tags}/>}
-                {this.state.selectedType === "Match the Following" && <Match tags={this.state.tags}/>}
+                {this.state.selectedType === "MCQ" && <MCQ tags={this.state.tags} reInit={this.reInit}/>}
+                {this.state.selectedType === "Short Answer" && <ShortAnswer tags={this.state.tags} reInit={this.reInit}/>}
+                {this.state.selectedType === "Match the Following" && <Match tags={this.state.tags} reInit={this.reInit}/>}
                 </div>
                 }
             </div>

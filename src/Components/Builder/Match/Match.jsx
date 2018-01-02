@@ -70,6 +70,7 @@ class Match extends Component {
                 console.log(question)
             }
             question = question.replace(/&nbsp;/g," ")
+            question = question.replace(/=/g,"##61##")
             let imagesAns = {}
             let imgAnsN = 0
             let col1Text = this.state.col1Text;
@@ -96,6 +97,7 @@ class Match extends Component {
                     console.log(option)
                 }
                 col1Text[i] = option.replace(/&nbsp;/g," ")
+                col1Text[i] = col1Text[i].replace(/=/g,"##61##")
             })
             let col2Text = this.state.col2Text;
             col2Text.map((option,i) => {
@@ -121,6 +123,7 @@ class Match extends Component {
                     console.log(option)
                 }
                 col2Text[i] = option.replace(/&nbsp;/g," ")
+                col2Text[i] = col2Text[i].replace(/=/g,"##61##")
             })
             console.log("Question: " + question);
             console.log("Column 1")
@@ -280,8 +283,11 @@ class Match extends Component {
         var elements = document.querySelectorAll("a[target='_blank'");
         if(!isEmpty(elements)) {
             for (let key in elements) {
-                elements[key].parentNode.removeChild(elements[key]);
-            }
+                try {
+                    elements[key].parentNode.removeChild(elements[key]);
+                } catch(err) {
+                    // do nothing
+                }            }
         }
     }
 
@@ -308,16 +314,16 @@ class Match extends Component {
     render() {
         return(
             <div>
-                <Question question={this.state.question}  handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
+                <Question model={this.state.question}  handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <div className="cols">
                     <div className="col1">
                     {this.state.column1.map((key,i) => (
-                        <Option num={i+1} handleOptions={this.handleCol1} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeOption} i={key} key={key}/>
+                        <Option model={this.state.col1Text[i]} num={i+1} handleOptions={this.handleCol1} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeOption} i={key} key={key}/>
                     ))}
                     </div>
                     <div className="col2">
                     {this.state.column2.map((key,i) => (
-                        <Option num={i+1} showNum={true} handleOptions={this.handleCol2} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addColumn2} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeColumn2} i={key} key={key}/>
+                        <Option model={this.state.col1Text[i]} num={i+1} showNum={true} handleOptions={this.handleCol2} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addColumn2} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeColumn2} i={key} key={key}/>
                     ))}
                     </div>
                 </div>

@@ -22,9 +22,20 @@ class ShortAnswer extends Component {
             answer: "",
             loading: false,
             type: "shortanswer",
-            preview: false,
-            id: 1
+            preview: false
         }
+    }
+
+    reInit = () => {
+        this.setState({
+            displayLatex: false,
+            question: "",
+            answer: "",
+            loading: false,
+            type: "shortanswer",
+            preview: false
+        })
+        this.props.reInit()
     }
 
     handleLatexDisplay = () => {
@@ -70,6 +81,7 @@ class ShortAnswer extends Component {
                 console.log(question)
             }
             question = question.replace(/&nbsp;/g," ")
+            question = question.replace(/=/g,"##61##")
             let answer = this.state.answer;
             let imagesAns = {}
             let imgAnsN = 0
@@ -95,6 +107,7 @@ class ShortAnswer extends Component {
                 console.log(answer)
             }
             answer = answer.replace(/&nbsp;/g," ")
+            answer = answer.replace(/=/g,"##61##")
             if(!this.state.loading) {
                 const thiss = this;
                 this.setState({loading: true})
@@ -140,8 +153,11 @@ class ShortAnswer extends Component {
         var elements = document.querySelectorAll("a[target='_blank'");
         if(!isEmpty(elements)) {
             for (let key in elements) {
-                elements[key].parentNode.removeChild(elements[key]);
-            }
+                try {
+                    elements[key].parentNode.removeChild(elements[key]);
+                } catch(err) {
+                    // do nothing
+                }            }
         }
     }
 
@@ -177,7 +193,7 @@ class ShortAnswer extends Component {
     render() {
         return(
             <div>
-                <Question question={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
+                <Question model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <div id="container" style={{borderTop: "4px solid #388287"}}>
                     <h3>Answer</h3>
                     <div className="togglebtn">
@@ -191,7 +207,7 @@ class ShortAnswer extends Component {
                             htmlAllowedTags: ['svg','g','text'],
                             charCounterCount: false,
                             toolbarButtons: ['bold', 'italic', 'underline','insertImage','subscript', 'superscript', 'align','fontSize','color','|','undo','redo']
-                        }} tag='textarea' onModelChange={this.handleAnswer}/>
+                        }} tag='textarea' model={this.state.answer} onModelChange={this.handleAnswer}/>
 
                 </div>
                 <div>

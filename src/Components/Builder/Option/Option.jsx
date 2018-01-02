@@ -36,7 +36,7 @@ class Option extends Component {
                             toolbarInline: true,
                             charCounterCount: false,
                             toolbarButtons: ['bold', 'italic', 'underline','insertImage','subscript', 'superscript', 'align','fontSize','color','|','undo','redo']
-                        }} tag='textarea' onModelChange={(model) => {this.props.handleOptions(model,this.props.i)}}/>
+                        }} tag='textarea' model={this.props.model} onModelChange={(model) => {this.props.handleOptions(model,this.props.i)}}/>
                     </div>
                 </div>
             </div>

@@ -20,18 +20,34 @@ class MCQ extends Component {
             nOptions: 4,
             displayLatex: false,
             question: "",
-            optionsText: ["",""],
+            optionsText: ["","","",""],
             loading: false,
             success: false,
             type: 'mcq',
             preview: false,
-            id: 1,
             converted: ""
         }
     }
 
     handleLatexDisplay = () => {
         this.setState({displayLatex: !this.state.displayLatex})
+    }
+
+    reInit = () => {
+        this.setState({
+            checked: [],
+            options: [0,1,2,3],
+            nOptions: 4,
+            displayLatex: false,
+            question: "",
+            optionsText: ["","","",""],
+            loading: false,
+            success: false,
+            type: 'mcq',
+            preview: false,
+            converted: ""
+        })
+        this.props.reInit()
     }
 
     submit = () => {
@@ -67,6 +83,7 @@ class MCQ extends Component {
             }
 
             question = question.replace(/&nbsp;/g," ")
+            question = question.replace(/=/g,"##61##")
             let options = this.state.optionsText;
             let imagesAns = {}
             let imgAnsN = 0
@@ -93,6 +110,7 @@ class MCQ extends Component {
                     console.log(option)
                 }
                 options[i] = option.replace(/&nbsp;/g," ")
+                options[i] = options[i].replace(/=/g,"##61##")
             })
             
             this.state.checked.map((checked,i) => {
@@ -113,6 +131,17 @@ class MCQ extends Component {
                     images: images,
                     imagesAns: imagesAns
                 }
+                let str = JSON.stringify(payload,[
+                    'question',
+                    'type',
+                    'options',
+                    'correct',
+                    'tags',
+                    'images',
+                    'imagesAns'
+                ])
+                console.log(str)
+                console.log(JSON.parse(str))
             axios({
                 method: 'POST',
                 headers: {
@@ -120,11 +149,11 @@ class MCQ extends Component {
                 },
                     url: '/api/create',
                     mode: 'cors',
-                    data: JSON.stringify(payload)
+                    data: str
                 })
                 .then(function (response) {
                     alert("Posted successfully")
-                    location.reload()
+                    thiss.reInit()
                 })
                 .catch(function (error) {
                     thiss.setState({loading: false})
@@ -199,21 +228,21 @@ class MCQ extends Component {
         console.log("run..")
         if(!isEmpty(elements)) {
             for (let key in elements) {
-                elements[key].parentNode.removeChild(elements[key]);
+                try {
+                    elements[key].parentNode.removeChild(elements[key]);
+                } catch(err) {
+                    // do nothing
+                }
             }
         }
     }
 
     componentDidMount() {
-        // this.removeWrapper()
+        this.removeWrapper()
     }
 
     componentDidUpdate() {
-        // this.removeWrapper()
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.state.id)
+        this.removeWrapper()
     }
 
     // removeWrapper = () => {
@@ -239,7 +268,7 @@ class MCQ extends Component {
                 <Question model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <h3 style={{padding: "10px", background: "#388287", margin: "0", color: "white"}}>Choices</h3>
                 {this.state.options.map((key,i) => (
-                    <Option handleOptions={this.handleOptions} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={this.state.checked} removeOption={this.removeOption} num={i+1} i={key} key={key}/>
+                    <Option model={this.state.optionsText[i]} handleOptions={this.handleOptions} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={this.state.checked} removeOption={this.removeOption} num={i+1} i={key} key={key}/>
                 ))}
                 <div>
                     <div onClick={this.submit} className="submit" disabled>{this.state.loading?"WAIT" : "SUBMIT"}</div>
