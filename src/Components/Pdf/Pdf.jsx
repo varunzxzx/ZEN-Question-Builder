@@ -16,6 +16,18 @@ class Pdf extends Component{
         input.addEventListener('change',this.mjelo)
     }
 
+    componentDidUpdate() {
+        console.log("component updated")
+        let input = document.querySelector('#file-input');
+        input.addEventListener('change',this.mjelo)
+    }
+
+    componentWillUnmount() {
+        console.log("component unmounted")
+        let input = document.querySelector('#file-input');
+        input.removeEventListener('change',this.mjelo)
+    }
+
     mjelo = (e) => {
         window.alert(e.target.value);
     }
