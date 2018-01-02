@@ -7,7 +7,6 @@ router.use(function (req, res, next) {
     try {
         req.body = JSON.parse(Object.keys(req.body)[0]);
     } catch (err) {
-        console.log(err)
         req.body = req.body;
     }
     next();

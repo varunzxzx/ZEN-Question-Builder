@@ -22,7 +22,7 @@ class Builder extends Component{
             tags: [],
             taglist: [],
             selectedType: "MCQ",
-            loading: true
+            loading: false
         }
     }
 
@@ -42,7 +42,7 @@ class Builder extends Component{
                     tmpTags.push(response.data.tags[key].tag)
                 }
                 console.log("fetched")
-                thiss.setState({taglist: tmpTags, loading: false});
+                thiss.setState({taglist: tmpTags});
             })
             .catch(function (error) {
                 console.log("error");
