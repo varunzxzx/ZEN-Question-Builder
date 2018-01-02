@@ -205,11 +205,11 @@ class MCQ extends Component {
     }
 
     componentDidMount() {
-        this.removeWrapper()
+        // this.removeWrapper()
     }
 
     componentDidUpdate() {
-        this.removeWrapper()
+        // this.removeWrapper()
     }
 
     componentWillUnmount() {
