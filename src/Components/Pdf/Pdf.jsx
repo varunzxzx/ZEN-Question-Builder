@@ -14,8 +14,8 @@ class Pdf extends Component{
     }
 
     changeFile = () => {
-        var preview = document.querySelector('.pdf'); //selects the query named img
-        var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+        var preview = document.querySelector('#iframe');
+        var file    = document.querySelector('input[type=file]').files[0];
         var reader  = new FileReader();
  
         reader.onloadend = function () {
@@ -23,7 +23,7 @@ class Pdf extends Component{
         }
  
         if (file) {
-            reader.readAsDataURL(file); //reads the data as a URL
+            reader.readAsDataURL(file);
         } else {
             preview.src = "";
         }
@@ -56,7 +56,7 @@ class Pdf extends Component{
         }
         return(
             <div style={styles.container}>
-                <iframe className="pdf" style={styles.iframe} title="pdf" src={this.state.src} frameBorder="0"></iframe>
+                <iframe id="iframe" style={styles.iframe} title="pdf" src={this.state.src} frameBorder="0"></iframe>
                 <div style={styles.change}>
                     <img id="change" onClick={this.handleChange} style={styles.img} src="assets/change.png" alt="Change"/>
                     <input style={styles.input} type="file" onChange={(e) => {this.changeFile(e)}}/>
