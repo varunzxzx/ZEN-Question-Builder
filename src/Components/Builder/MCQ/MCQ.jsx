@@ -16,8 +16,8 @@ class MCQ extends Component {
         super(props);
         this.state = {
             checked: [],
-            options: [0,1],
-            nOptions: 2,
+            options: [0,1,2,3],
+            nOptions: 4,
             displayLatex: false,
             question: "",
             optionsText: ["",""],
