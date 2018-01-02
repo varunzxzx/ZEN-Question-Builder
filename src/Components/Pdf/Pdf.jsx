@@ -5,7 +5,7 @@ class Pdf extends Component{
         super(props);
         this.state = {
             display: true,
-            src: "https://imlearner.files.wordpress.com/2010/08/computer-system-architecture-3rd-ed-morris-mano-p98.pdf",
+            src: "",
         }
         console.log("constructor - pdf")
     }
@@ -30,6 +30,7 @@ class Pdf extends Component{
 
     mjelo = (e) => {
         window.alert(e.target.value);
+        this.changeFile()
     }
 
     handleChange = () => {
@@ -86,7 +87,7 @@ class Pdf extends Component{
                 <iframe id="iframe" style={styles.iframe} title="pdf" src={this.state.src} frameBorder="0"></iframe>
                 <div style={styles.change}>
                     <img id="change" onClick={this.handleChange} style={styles.img} src="assets/change.png" alt="Change"/>
-                    <input id="file-input" style={styles.input} type="file" onChange={this.changeFile}/>
+                    <input id="file-input" style={styles.input} type="file"/>
                 </div>
             </div>
         )
