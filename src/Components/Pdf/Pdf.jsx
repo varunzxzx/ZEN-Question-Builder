@@ -10,11 +10,13 @@ class Pdf extends Component{
     }
 
     componentDidMount() {
+        console.log("component mounted")
         let input = document.querySelector('#file-input');
-        console.log(input)
-        input.onchange = (e) => {
-            window.alert(e.target.value)
-        }
+        input.addEventListener('change',this.mjelo)
+    }
+
+    mjelo = (e) => {
+        window.alert(e.target.value);
     }
 
     handleChange = () => {
