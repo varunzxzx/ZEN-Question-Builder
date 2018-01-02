@@ -7,6 +7,7 @@ class Pdf extends Component{
             display: true,
             src: "https://imlearner.files.wordpress.com/2010/08/computer-system-architecture-3rd-ed-morris-mano-p98.pdf",
         }
+        console.log("constructor - pdf")
     }
 
     componentDidMount() {
@@ -67,6 +68,7 @@ class Pdf extends Component{
                 left: "10px",
             },
         }
+        console.log("render - pdf")
         return(
             <div style={styles.container}>
                 <iframe id="iframe" style={styles.iframe} title="pdf" src={this.state.src} frameBorder="0"></iframe>
