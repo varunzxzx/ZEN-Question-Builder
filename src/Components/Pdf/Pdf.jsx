@@ -7,30 +7,16 @@ class Pdf extends Component{
             display: true,
             src: "",
         }
-        console.log("constructor - pdf")
     }
 
     componentDidMount() {
-        console.log("component mounted")
         let input = document.querySelector('#fileInput');
-        input.addEventListener('change',this.mjelo)
-    }
-
-    componentDidUpdate() {
-        console.log("component updated")
-        let input = document.querySelector('#fileInput');
-        input.addEventListener('change',this.mjelo)
+        input.addEventListener('change',this.changeFile)
     }
 
     componentWillUnmount() {
-        console.log("component unmounted")
         let input = document.querySelector('#fileInput');
-        input.removeEventListener('change',this.mjelo)
-    }
-
-    mjelo = (e) => {
-        window.alert(e.target.value);
-        this.changeFile()
+        input.removeEventListener('change',this.changeFile)
     }
 
     handleChange = () => {
