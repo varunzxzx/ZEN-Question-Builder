@@ -14,6 +14,7 @@ class Pdf extends Component{
     }
 
     changeFile = () => {
+        console.log("changing file now...")
         var preview = document.querySelector('#iframe');
         var file    = document.querySelector('#file-input').files[0];
         var reader  = new FileReader();
@@ -61,7 +62,7 @@ class Pdf extends Component{
                 <iframe id="iframe" style={styles.iframe} title="pdf" src={this.state.src} frameBorder="0"></iframe>
                 <div style={styles.change}>
                     <img id="change" onClick={this.handleChange} style={styles.img} src="assets/change.png" alt="Change"/>
-                    <input id="file-input" style={styles.input} type="file" onChange={(e) => {this.changeFile(e)}}/>
+                    <input id="file-input" style={styles.input} type="file" onChange={this.changeFile}/>
                 </div>
             </div>
         )
