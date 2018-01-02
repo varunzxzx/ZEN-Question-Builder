@@ -196,7 +196,7 @@ class MCQ extends Component {
 
     removeWrapper = () => {
         var elements = document.querySelectorAll("a[target='_blank'");
-        console.log("running..")
+        console.log("run..")
         if(!isEmpty(elements)) {
             for (let key in elements) {
                 elements[key].parentNode.removeChild(elements[key]);

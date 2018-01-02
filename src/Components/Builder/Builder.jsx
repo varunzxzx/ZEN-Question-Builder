@@ -63,6 +63,7 @@ class Builder extends Component{
 
     componentDidUpdate() {
         let taglist = this.state.taglist;
+        console.log("Builder updated")
         new autoComplete({
             selector: '#hero-demo',
             minChars: 1,
@@ -103,7 +104,6 @@ class Builder extends Component{
             }
             document.querySelector('#hero-demo').value = "";
             let elements = document.querySelectorAll('.autocomplete-suggestion')
-            console.log(elements)
             if(!isEmpty(elements)) {
                 for (let key in elements) {
                     elements[key].parentNode.removeChild(elements[key]);
