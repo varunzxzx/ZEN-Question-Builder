@@ -12,19 +12,19 @@ class Pdf extends Component{
 
     componentDidMount() {
         console.log("component mounted")
-        let input = document.querySelector('#file-input');
+        let input = document.querySelector('#fileInput');
         input.addEventListener('change',this.mjelo)
     }
 
     componentDidUpdate() {
         console.log("component updated")
-        let input = document.querySelector('#file-input');
+        let input = document.querySelector('#fileInput');
         input.addEventListener('change',this.mjelo)
     }
 
     componentWillUnmount() {
         console.log("component unmounted")
-        let input = document.querySelector('#file-input');
+        let input = document.querySelector('#fileInput');
         input.removeEventListener('change',this.mjelo)
     }
 
@@ -39,8 +39,8 @@ class Pdf extends Component{
 
     changeFile = () => {
         console.log("changing file now...")
-        var preview = document.querySelector('#iframe');
-        var file    = document.querySelector('#file-input').files[0];
+        var preview = document.querySelector('#myIframe');
+        var file    = document.querySelector('#fileInput').files[0];
         var reader  = new FileReader();
         console.log(preview)
         console.log(file)
@@ -84,10 +84,10 @@ class Pdf extends Component{
         console.log("render - pdf")
         return(
             <div style={styles.container}>
-                <iframe id="iframe" style={styles.iframe} title="pdf" src={this.state.src} frameBorder="0"></iframe>
+                <iframe id="myIframe" style={styles.iframe} title="pdf" src={this.state.src} frameBorder="0"></iframe>
                 <div style={styles.change}>
-                    <img id="change" onClick={this.handleChange} style={styles.img} src="assets/change.png" alt="Change"/>
-                    <input id="file-input" style={styles.input} type="file"/>
+                    <img onClick={this.handleChange} style={styles.img} src="assets/change.png" alt="Change"/>
+                    <input id="fileInput" style={styles.input} type="file"/>
                 </div>
             </div>
         )
