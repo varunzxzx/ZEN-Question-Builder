@@ -19,6 +19,7 @@ class Pdf extends Component{
         var reader  = new FileReader();
  
         reader.onloadend = function () {
+            console.log(reader.result)
             preview.src = reader.result;
         }
  
