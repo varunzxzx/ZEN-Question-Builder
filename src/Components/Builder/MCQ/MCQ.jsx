@@ -131,17 +131,6 @@ class MCQ extends Component {
                     images: images,
                     imagesAns: imagesAns
                 }
-                let str = JSON.stringify(payload,[
-                    'question',
-                    'type',
-                    'options',
-                    'correct',
-                    'tags',
-                    'images',
-                    'imagesAns'
-                ])
-                console.log(str)
-                console.log(JSON.parse(str))
             axios({
                 method: 'POST',
                 headers: {
@@ -149,7 +138,7 @@ class MCQ extends Component {
                 },
                     url: '/api/create',
                     mode: 'cors',
-                    data: str
+                    data: JSON.stringify(payload)
                 })
                 .then(function (response) {
                     alert("Posted successfully")

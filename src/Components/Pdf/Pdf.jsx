@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { Document } from 'react-pdf';
 class Pdf extends Component{
     constructor(props) {
         super(props);
@@ -27,19 +27,21 @@ class Pdf extends Component{
         console.log("changing file now...")
         var preview = document.querySelector('#myIframe');
         var file    = document.querySelector('#fileInput').files[0];
-        var reader  = new FileReader();
-        console.log(preview)
-        console.log(file)
-        console.log(reader)
-        reader.onloadend = function () {
-            preview.src = reader.result;
-        }
+        this.setState({file})
+        // var reader  = new FileReader();
+        // console.log(preview)
+        // console.log(file)
+        // console.log(reader)
+        // let thiss = this;
+        // reader.onloadend = function () {
+        //     thiss.setState({src: reader.result})
+        // }
  
-        if (file) {
-            reader.readAsDataURL(file);
-        } else {
-            preview.src = "";
-        }
+        // if (file) {
+        //     reader.readAsDataURL(file);
+        // } else {
+        //     preview.src = "";
+        // }
     }
 
     render() {
@@ -70,11 +72,15 @@ class Pdf extends Component{
         console.log("render - pdf")
         return(
             <div style={styles.container}>
-                <iframe id="myIframe" style={styles.iframe} title="pdf" src={this.state.src} frameBorder="0"></iframe>
-                <div style={styles.change}>
+            {/* <Document
+                file={this.state.file}
+                error={"fail to load"}>
+            </Document> */}
+                <iframe id="myIframe" style={styles.iframe} title="pdf" src={"http://projekty.wojtekmaj.pl/react-pdf/"} frameBorder="0" />
+                {/* <div style={styles.change}>
                     <img onClick={this.handleChange} style={styles.img} src="assets/change.png" alt="Change"/>
                     <input id="fileInput" style={styles.input} type="file"/>
-                </div>
+                </div> */}
             </div>
         )
     }

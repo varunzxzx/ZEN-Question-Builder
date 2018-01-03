@@ -144,6 +144,7 @@ class Match extends Component {
                     col1: col1Text,
                     col2: col2Text,
                     tags: this.props.tags,
+                    images: images,
                     matchAnswer: this.state.answers,
                     imagesAns: imagesAns
                 }

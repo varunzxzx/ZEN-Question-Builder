@@ -115,6 +115,7 @@ class ShortAnswer extends Component {
                     question: question,
                     type: this.state.type,
                     answer: answer,
+                    images: images,
                     tags: this.props.tags,
                     imagesAns: imagesAns
                 }
