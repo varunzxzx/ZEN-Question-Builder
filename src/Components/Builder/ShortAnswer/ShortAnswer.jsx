@@ -212,7 +212,6 @@ class ShortAnswer extends Component {
 
                 </div>
                 <div>
-                    <div onClick={this.submit} className="submit">{this.state.loading?"WAIT" : "SUBMIT"}</div>
                     <div onClick={this.preview} className="preview">PREVIEW</div>
                 </div>
                 {this.state.preview && <div className="preview-display">
@@ -221,6 +220,9 @@ class ShortAnswer extends Component {
                         <div style={{textAlign: "center"}}><b>Answer</b></div>
                         <div className="answer"><InlineTex texContent={this.state.answer}/></div>
                         <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
+                        <div>
+                            <div onClick={this.submit} className="submit">{this.state.loading?"WAIT" : "SUBMIT"}</div>
+                        </div>
                     </div>}
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}
             </div>

@@ -260,7 +260,6 @@ class MCQ extends Component {
                     <Option model={this.state.optionsText[i]} handleOptions={this.handleOptions} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={this.state.checked} removeOption={this.removeOption} num={i+1} i={key} key={key}/>
                 ))}
                 <div>
-                    <div onClick={this.submit} className="submit" disabled>{this.state.loading?"WAIT" : "SUBMIT"}</div>
                     <div className="preview" onClick={this.preview}>PREVIEW</div>
                 </div>
                 {this.state.preview && <div className="preview-display">
@@ -271,6 +270,9 @@ class MCQ extends Component {
                             return (<div key={i} className={`option${i}`}><b>{i+1}.</b> <InlineTex texContent={option}/></div>)
                         })}
                         <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
+                        <div>
+                            <div onClick={this.submit} className="submit" disabled>{this.state.loading?"WAIT" : "SUBMIT"}</div>
+                        </div>
                     </div>}
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}
             </div>

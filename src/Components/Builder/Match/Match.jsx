@@ -339,7 +339,6 @@ class Match extends Component {
                     }
                 </div>
                 <div>
-                    <div onClick={this.submit} className="submit">{this.state.loading?"WAIT" : "SUBMIT"}</div>
                     <div onClick={this.preview} className="preview">PREVIEW</div>
                 </div>
                 {this.state.preview && <div className="preview-display">
@@ -359,6 +358,9 @@ class Match extends Component {
                             </div>
                         </div>
                         <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
+                        <div>
+                            <div onClick={this.submit} className="submit">{this.state.loading?"WAIT" : "SUBMIT"}</div>
+                        </div>
                     </div>}
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}
             </div>

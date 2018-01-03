@@ -8,16 +8,6 @@ class Pdf extends Component{
         }
     }
 
-    componentDidMount() {
-        let input = document.querySelector('#fileInput');
-        input.addEventListener('change',this.changeFile)
-    }
-
-    componentWillUnmount() {
-        let input = document.querySelector('#fileInput');
-        input.removeEventListener('change',this.changeFile)
-    }
-
     handleChange = () => {
         this.setState({display: !this.state.display})
     }

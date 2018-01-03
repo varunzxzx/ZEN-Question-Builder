@@ -14,6 +14,7 @@ class Question extends Component {
                 </div>
 
                 <FroalaEditor config={{
+                    height: 100,
                     placeholderText: 'Edit Your Content Here!',
                     imageUploadURL: '/api/upload',
                     charCounterCount: false,
