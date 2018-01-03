@@ -71,6 +71,8 @@ class Match extends Component {
             }
             question = question.replace(/&nbsp;/g," ")
             question = question.replace(/=/g,"##61##")
+            question = question.replace(/&gt;/g,"##62##")
+            question = question.replace(/&lt;/g,"##63##")
             let imagesAns = {}
             let imgAnsN = 0
             let col1Text = this.state.col1Text;
@@ -98,6 +100,8 @@ class Match extends Component {
                 }
                 col1Text[i] = option.replace(/&nbsp;/g," ")
                 col1Text[i] = col1Text[i].replace(/=/g,"##61##")
+                col1Text[i] = col1Text[i].replace(/&gt;/g,"##62##")
+                col1Text[i] = col1Text[i].replace(/&lt;/g,"##63##")
             })
             let col2Text = this.state.col2Text;
             col2Text.map((option,i) => {
@@ -124,6 +128,8 @@ class Match extends Component {
                 }
                 col2Text[i] = option.replace(/&nbsp;/g," ")
                 col2Text[i] = col2Text[i].replace(/=/g,"##61##")
+                col2Text[i] = col2Text[i].replace(/&gt;/g,"##62##")
+                col2Text[i] = col2Text[i].replace(/&lt;/g,"##63##")
             })
             console.log("Question: " + question);
             console.log("Column 1")

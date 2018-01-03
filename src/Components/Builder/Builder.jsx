@@ -110,7 +110,11 @@ class Builder extends Component{
             let elements = document.querySelectorAll('.autocomplete-suggestion')
             if(!isEmpty(elements)) {
                 for (let key in elements) {
-                    elements[key].parentNode.removeChild(elements[key]);
+                    try {
+                        elements[key].parentNode.removeChild(elements[key]);
+                    } catch(err) {
+                        //do nothing
+                    }
                 }
             }
         }

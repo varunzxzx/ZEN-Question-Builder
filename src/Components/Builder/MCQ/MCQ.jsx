@@ -84,6 +84,8 @@ class MCQ extends Component {
 
             question = question.replace(/&nbsp;/g," ")
             question = question.replace(/=/g,"##61##")
+            question = question.replace(/&gt;/g,"##62##")
+            question = question.replace(/&lt;/g,"##63##")
             let options = this.state.optionsText;
             let imagesAns = {}
             let imgAnsN = 0
@@ -111,6 +113,8 @@ class MCQ extends Component {
                 }
                 options[i] = option.replace(/&nbsp;/g," ")
                 options[i] = options[i].replace(/=/g,"##61##")
+                options[i] = options[i].replace(/&gt;/g,"##62##")
+                options[i] = options[i].replace(/&lt;/g,"##63##")
             })
             
             this.state.checked.map((checked,i) => {
@@ -267,6 +271,8 @@ class MCQ extends Component {
                         <div className="question"><InlineTex texContent={this.state.question}/></div>
                         <div style={{textAlign: "center"}}><b>Options</b></div>
                         {this.state.optionsText.map((option,i) => {
+                            option = option.replace(/##62##/g,">")
+                            option = option.replace(/##63##/g,"<")
                             return (<div key={i} className={`option${i}`}><b>{i+1}.</b> <InlineTex texContent={option}/></div>)
                         })}
                         <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
