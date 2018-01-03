@@ -135,7 +135,7 @@ class Builder extends Component{
                     </select>
                     <div id="tags">
                         Tags:&nbsp;&nbsp;
-                        <input id="hero-demo" onKeyPress={(e) => {this.handleNew(e)}} autoFocus type="text" name="q" placeholder="Type your tags here..." />
+                        <input id="hero-demo" onKeyPress={(e) => {this.handleNew(e)}} autoFocus type="text" name="q" placeholder="Type tags here" />
                     </div>
                 </div>
                 <ul id="taglist" style={{display: this.state.tags.length ? "block" : "none"}}>
