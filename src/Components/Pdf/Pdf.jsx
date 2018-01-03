@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Document } from 'react-pdf';
 class Pdf extends Component{
     constructor(props) {
         super(props);
