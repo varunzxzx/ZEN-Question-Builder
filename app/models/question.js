@@ -1,7 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var Question = sequelize.define('Question', {
-    question: DataTypes.STRING,
+    question: DataTypes.TEXT,
     type: DataTypes.STRING,
     images: {
         type: DataTypes.JSON
