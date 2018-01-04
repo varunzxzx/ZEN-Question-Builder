@@ -25,12 +25,17 @@ class MCQ extends Component {
             success: false,
             type: 'mcq',
             preview: false,
-            converted: ""
+            converted: "",
+            hints: ""
         }
     }
 
     handleLatexDisplay = () => {
         this.setState({displayLatex: !this.state.displayLatex})
+    }
+
+    handleHints = (e) => {
+        this.setState({hints: e.target.value})
     }
 
     reInit = () => {
@@ -86,6 +91,7 @@ class MCQ extends Component {
             question = question.replace(/=/g,"##61##")
             question = question.replace(/&gt;/g,"##62##")
             question = question.replace(/&lt;/g,"##63##")
+            question = question.replace(/&amp;/g,"and")
             let options = this.state.optionsText;
             let imagesAns = {}
             let imgAnsN = 0
@@ -114,6 +120,7 @@ class MCQ extends Component {
                 option = option.replace(/&nbsp;/g," ")
                 option = option.replace(/=/g,"##61##")
                 option = option.replace(/&gt;/g,"##62##")
+                option = option.replace(/&amp;/g,"and")
                 return option.replace(/&lt;/g,"##63##")
             })
             
@@ -134,7 +141,8 @@ class MCQ extends Component {
                     correct: correct,
                     tags: this.props.tags,
                     images: images,
-                    imagesAns: imagesAns
+                    imagesAns: imagesAns,
+                    hints: this.state.hints.split(',') || null
                 }
             axios({
                 method: 'POST',
@@ -259,7 +267,7 @@ class MCQ extends Component {
     render() {
         return(
             <div>
-                <Question model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
+                <Question hints={this.state.hints} changeHints={this.handleHints} model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <h3 style={{padding: "10px", background: "#388287", margin: "0", color: "white"}}>Choices</h3>
                 {this.state.options.map((key,i) => (
                     <Option model={this.state.optionsText[i]} handleOptions={this.handleOptions} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={this.state.checked} removeOption={this.removeOption} num={i+1} i={key} key={key}/>

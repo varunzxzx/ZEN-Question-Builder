@@ -20,7 +20,9 @@ class Question extends Component {
                     charCounterCount: false,
                     toolbarButtons: ['bold', 'italic', 'underline','insertImage','subscript', 'superscript', 'align','fontSize','color','|','undo','redo']
                 }} tag='textarea' model={this.props.model} onModelChange={this.props.handleTextChange}/>
-
+                <div className="hints">
+                    <input placeholder="Type hints here" value={this.props.hints} onChange={this.props.changeHints} type="text"/>
+                </div>
             </div>
         )
     }

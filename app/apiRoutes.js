@@ -44,7 +44,8 @@ router.post('/create',(req,res) => {
     const question = {
         question: req.body.question,
         type: req.body.type,
-        images: req.body.images || null
+        images: req.body.images || null,
+        hints: req.body.hints || null
     }
     let questionAttr = {}
     if(question.type === "mcq") {

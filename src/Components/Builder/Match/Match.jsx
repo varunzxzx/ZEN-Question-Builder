@@ -34,8 +34,13 @@ class Match extends Component {
             answers: {},
             isLoading: false,
             type: "match",
-            preview: false
+            preview: false,
+            hints: ""
         }
+    }
+
+    handleHints = (e) => {
+        this.setState({hints: e.target.value})
     }
 
     reInit = () => {
@@ -90,6 +95,7 @@ class Match extends Component {
             question = question.replace(/=/g,"##61##")
             question = question.replace(/&gt;/g,"##62##")
             question = question.replace(/&lt;/g,"##63##")
+            question = question.replace(/&amp;/g,"and")
             let imagesAns = {}
             let imgAnsN = 0
             let col1Text = this.state.col1Text;
@@ -118,6 +124,7 @@ class Match extends Component {
                 option = option.replace(/&nbsp;/g," ")
                 option = option.replace(/=/g,"##61##")
                 option = option.replace(/&gt;/g,"##62##")
+                option = option.replace(/&amp;/g,"and")
                 return option.replace(/&lt;/g,"##63##")
             })
             let col2Text = this.state.col2Text;
@@ -146,6 +153,7 @@ class Match extends Component {
                 option = option.replace(/&nbsp;/g," ")
                 option = option.replace(/=/g,"##61##")
                 option = option.replace(/&gt;/g,"##62##")
+                option = option.replace(/&amp;/g,"and")
                 return option.replace(/&lt;/g,"##63##")
             })
             console.log("Question: " + question);
@@ -338,7 +346,7 @@ class Match extends Component {
     render() {
         return(
             <div>
-                <Question model={this.state.question}  handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
+                <Question hints={this.state.hints} changeHints={this.handleHints} model={this.state.question}  handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <div className="cols">
                     <div className="col1">
                     {this.state.column1.map((key,i) => (

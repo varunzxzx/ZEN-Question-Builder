@@ -9,6 +9,18 @@ module.exports = (sequelize, DataTypes) => {
     published: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
+    },
+    hints: {
+        type: DataTypes.STRING,
+        get: function () {
+            if(this.getDataValue('hints')) return this.getDataValue('options').split(';;')
+        },
+        set: function (val) {
+            if(val) {
+                let data = val.join(';;')
+                this.setDataValue('hints',data);
+            }
+        }
     }
   });
 

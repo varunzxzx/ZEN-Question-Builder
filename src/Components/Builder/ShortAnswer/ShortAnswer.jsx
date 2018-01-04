@@ -22,8 +22,13 @@ class ShortAnswer extends Component {
             answer: "",
             isLoading: false,
             type: "shortanswer",
-            preview: false
+            preview: false,
+            hints: ""
         }
+    }
+
+    handleHints = (e) => {
+        this.setState({hints: e.target.value})
     }
 
     reInit = () => {
@@ -84,6 +89,7 @@ class ShortAnswer extends Component {
             question = question.replace(/=/g,"##61##")
             question = question.replace(/&gt;/g,"##62##")
             question = question.replace(/&lt;/g,"##63##")
+            question = question.replace(/&amp;/g,"and")
             let answer = this.state.answer;
             let imagesAns = {}
             let imgAnsN = 0
@@ -112,6 +118,7 @@ class ShortAnswer extends Component {
             answer = answer.replace(/=/g,"##61##")
             answer = answer.replace(/&gt;/g,"##62##")
             answer = answer.replace(/&lt;/g,"##63##")
+            answer = answer.replace(/&amp;/g,"and")
             if(!this.state.isLoading) {
                 const thiss = this;
                 this.setState({isLoading: true})
@@ -197,7 +204,7 @@ class ShortAnswer extends Component {
     render() {
         return(
             <div>
-                <Question model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
+                <Question hints={this.state.hints} changeHints={this.handleHints} model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <div id="container" style={{borderTop: "4px solid #388287"}}>
                     <h3>Answer</h3>
                     <div className="togglebtn">
