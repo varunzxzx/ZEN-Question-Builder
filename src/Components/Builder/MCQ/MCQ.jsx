@@ -25,8 +25,9 @@ class MCQ extends Component {
             success: false,
             type: 'mcq',
             preview: false,
-            converted: "",
-            hints: ""
+            hints: [0],
+            nHints: 1,
+            hintsText: [""]
         }
     }
 
@@ -50,7 +51,10 @@ class MCQ extends Component {
             success: false,
             type: 'mcq',
             preview: false,
-            converted: ""
+            hints: [0],
+            nHints: 1,
+            hintsText: [""],
+            solution: ""
         })
         this.props.reInit()
     }
@@ -87,14 +91,47 @@ class MCQ extends Component {
                 console.log(question)
             }
 
+            let imagesAns = {}
+            let imgAnsN = 0
+
             question = question.replace(/&nbsp;/g," ")
             question = question.replace(/=/g,"##61##")
             question = question.replace(/&gt;/g,"##62##")
             question = question.replace(/&lt;/g,"##63##")
             question = question.replace(/&amp;/g,"and")
+            let solution = this.state.solution
+            if(solution) {
+                while(solution.indexOf("<img") !== -1) {
+                    let start = solution.indexOf("<img");
+                    let end = solution.indexOf("\">")
+                    console.log(start)
+                    console.log(end)
+                    console.log(solution.substring(start,end+2))
+    
+                    let src = "",ch = solution.substring(solution.indexOf("src=\"")+5,solution.indexOf("src=\"")+6);
+                    console.log(`ch= ${ch}`)
+                    let i = 5;
+                    while(ch !== "\"") {
+                        src = src + ch;
+                        i++;
+                        ch = solution.substring(solution.indexOf("src=\"")+i,solution.indexOf("src=\"")+i+1);
+                    }
+                    console.log(src)
+    
+                    imagesAns[imgAnsN] = src;
+                    solution = solution.replace(solution.substring(start,end+2),`@@${imgAnsN}@@`)
+                    imgAnsN++;
+                    console.log(solution)
+                }
+    
+                solution = solution.replace(/&nbsp;/g," ")
+                solution = solution.replace(/=/g,"##61##")
+                solution = solution.replace(/&gt;/g,"##62##")
+                solution = solution.replace(/&lt;/g,"##63##")
+                solution = solution.replace(/&amp;/g,"and")
+            }
+
             let options = this.state.optionsText;
-            let imagesAns = {}
-            let imgAnsN = 0
             let OPTIONS = options.map((option,i) => {
                 while(option.indexOf("<img") !== -1) {
                     let start = option.indexOf("<img");
@@ -123,6 +160,38 @@ class MCQ extends Component {
                 option = option.replace(/&amp;/g,"and")
                 return option.replace(/&lt;/g,"##63##")
             })
+            let hintss = this.state.hintsText;
+            let HINTS = []
+            if(hintss) {
+                HINTS = hintss.map((option,i) => {
+                    while(option.indexOf("<img") !== -1) {
+                        let start = option.indexOf("<img");
+                        let end = option.indexOf("\">")
+                        console.log(start)
+                        console.log(end)
+                        console.log(option.substring(start,end+2))
+        
+                        let src = "",ch = option.substring(option.indexOf("src=\"")+5,option.indexOf("src=\"")+6);
+                        console.log(`ch= ${ch}`)
+                        let i = 5;
+                        while(ch !== "\"") {
+                            src = src + ch;
+                            i++;
+                            ch = option.substring(option.indexOf("src=\"")+i,option.indexOf("src=\"")+i+1);
+                        }
+                        
+                        images[imgN] = src;
+                        option = option.replace(option.substring(start,end+2),`@@${imgN}@@`)
+                        imgN++;
+                        console.log(option)
+                    }
+                    option = option.replace(/&nbsp;/g," ")
+                    option = option.replace(/=/g,"##61##")
+                    option = option.replace(/&gt;/g,"##62##")
+                    option = option.replace(/&amp;/g,"and")
+                    return option.replace(/&lt;/g,"##63##")
+                })
+            }
             
             this.state.checked.map((checked,i) => {
                 if(this.state.options.indexOf(checked) !== -1) {
@@ -142,7 +211,8 @@ class MCQ extends Component {
                     tags: this.props.tags,
                     images: images,
                     imagesAns: imagesAns,
-                    hints: this.state.hints.split(',') || null
+                    hints: HINTS.length === 0?null : HINTS,
+                    solution: solution || null
                 }
             axios({
                 method: 'POST',
@@ -174,12 +244,20 @@ class MCQ extends Component {
         this.setState({optionsText: tmpOptionsText})
     }
 
+    handleHints = (model,e) => {
+        let tmpOptions = this.state.hints;
+        let i = tmpOptions.indexOf(parseInt(e,10));
+        let tmpOptionsText = this.state.hintsText;
+        tmpOptionsText[i] = model;
+        this.setState({hintsText: tmpOptionsText})
+    }
+
     handleTextChange = (model) => {
         this.setState({question: model})
     }
 
     addOption = () => {
-        let builder = document.querySelector('#builder');        
+        // let builder = document.querySelector('#builder');        
         let tmpOptions = this.state.options;
         let tmpNOptions = this.state.nOptions;
         tmpNOptions++;
@@ -187,8 +265,31 @@ class MCQ extends Component {
         let tmpOptionsText = this.state.optionsText;
         tmpOptionsText.push("");
         this.setState({options: tmpOptions, nOptions: tmpNOptions,optionsText: tmpOptionsText},() => {
+            // builder.scrollTop = builder.scrollHeight;
+        });
+    }
+
+    addHint = () => {
+        let builder = document.querySelector('#builder');        
+        let tmpOptions = this.state.hints;
+        let tmpNOptions = this.state.nHints;
+        tmpNOptions++;
+        tmpOptions.push(tmpNOptions);
+        let tmpOptionsText = this.state.hintsText;
+        tmpOptionsText.push("");
+        this.setState({hints: tmpOptions, nHints: tmpNOptions,hintsText: tmpOptionsText},() => {
             builder.scrollTop = builder.scrollHeight;
         });
+    }
+
+    handleCheck = (i) => {
+        let tmpChecked = this.state.checked;
+        if(tmpChecked.indexOf(i) === -1) {
+            tmpChecked.push(i);
+        } else {
+            tmpChecked.splice(tmpChecked.indexOf(i),1);
+        }
+        this.setState({checked: tmpChecked});
     }
 
     handleCheck = (i) => {
@@ -210,6 +311,18 @@ class MCQ extends Component {
         if(tmpOptions.length>2) {
             tmpOptions.splice(tmpOptions.indexOf(i),1);
             this.setState({options: tmpOptions, nOptions: tmpNOptions, optionsText: tmpOptionsText});
+        }
+    }
+
+    removeHint = (i) => {
+        let tmpOptions = this.state.hints;
+        let tmpNOptions = this.state.nHints;
+        tmpNOptions--;
+        let tmpOptionsText = this.state.hintsText;
+        tmpOptionsText.pop();
+        if(tmpOptions.length>1) {
+            tmpOptions.splice(tmpOptions.indexOf(i),1);
+            this.setState({hints: tmpOptions, nHints: tmpNOptions, hintsText: tmpOptionsText});
         }
     }
 
@@ -267,11 +380,17 @@ class MCQ extends Component {
     render() {
         return(
             <div>
-                <Question hints={this.state.hints} changeHints={this.handleHints} model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
+                <Question model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <h3 style={{padding: "10px", background: "#388287", margin: "0", color: "white"}}>Choices</h3>
                 {this.state.options.map((key,i) => (
                     <Option model={this.state.optionsText[i]} handleOptions={this.handleOptions} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={this.state.checked} removeOption={this.removeOption} num={i+1} i={key} key={key}/>
                 ))}
+                <h3 style={{padding: "10px", background: "#388287", margin: "0", color: "white"}}>Hints</h3>
+                {this.state.hints.map((key,i) => (
+                    <Option model={this.state.hintsText[i]} handleOptions={this.handleHints} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addHint} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeHint} num={i+1} i={key} key={i}/>
+                ))}
+                <h3 style={{padding: "10px", background: "#388287", margin: "0", color: "white"}}>Solution</h3>
+                <Question off={true} model={this.state.solution} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={(m) => {this.setState({solution: m})}}/>
                 <div>
                     <div className="preview" onClick={this.preview}>PREVIEW</div>
                 </div>

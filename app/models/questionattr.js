@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
             }
         }
     },
+    solution: {
+        type: DataTypes.TEXT
+    },
     correct: {
         type: DataTypes.STRING,
         get: function () {
@@ -25,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
             }
         }
     },
-    answer: DataTypes.STRING,
+    answer: DataTypes.TEXT,
     col1: {
         type: DataTypes.STRING,
         get: function () {
@@ -51,6 +54,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     },
     matchAnswer: DataTypes.JSON,
+    matchSolution: DataTypes.TEXT,
     images: {
         type: DataTypes.JSON,
         // get: function () {

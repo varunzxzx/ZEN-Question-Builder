@@ -35,7 +35,9 @@ class Match extends Component {
             isLoading: false,
             type: "match",
             preview: false,
-            hints: ""
+            hints: [0],
+            nHints: 1,
+            hintsText: [""]
         }
     }
 
@@ -56,7 +58,10 @@ class Match extends Component {
             answers: {},
             isLoading: false,
             type: "match",
-            preview: false
+            preview: false,
+            hints: [0],
+            nHints: 1,
+            hintsText: [""]
         })
         this.props.reInit()
     }
@@ -156,6 +161,72 @@ class Match extends Component {
                 option = option.replace(/&amp;/g,"and")
                 return option.replace(/&lt;/g,"##63##")
             })
+
+            let hintss = this.state.hintsText;
+            let HINTS = []
+            if(hintss) {
+                HINTS = hintss.map((option,i) => {
+                    while(option.indexOf("<img") !== -1) {
+                        let start = option.indexOf("<img");
+                        let end = option.indexOf("\">")
+                        console.log(start)
+                        console.log(end)
+                        console.log(option.substring(start,end+2))
+        
+                        let src = "",ch = option.substring(option.indexOf("src=\"")+5,option.indexOf("src=\"")+6);
+                        console.log(`ch= ${ch}`)
+                        let i = 5;
+                        while(ch !== "\"") {
+                            src = src + ch;
+                            i++;
+                            ch = option.substring(option.indexOf("src=\"")+i,option.indexOf("src=\"")+i+1);
+                        }
+                        
+                        imagesAns[imgAnsN] = src;
+                        option = option.replace(option.substring(start,end+2),`@@${imgAnsN}@@`)
+                        imgAnsN++;
+                        console.log(option)
+                    }
+                    option = option.replace(/&nbsp;/g," ")
+                    option = option.replace(/=/g,"##61##")
+                    option = option.replace(/&gt;/g,"##62##")
+                    option = option.replace(/&amp;/g,"and")
+                    return option.replace(/&lt;/g,"##63##")
+                })
+            }
+
+            let solution = this.state.solution
+            if(solution) {
+                while(solution.indexOf("<img") !== -1) {
+                    let start = solution.indexOf("<img");
+                    let end = solution.indexOf("\">")
+                    console.log(start)
+                    console.log(end)
+                    console.log(solution.substring(start,end+2))
+    
+                    let src = "",ch = solution.substring(solution.indexOf("src=\"")+5,solution.indexOf("src=\"")+6);
+                    console.log(`ch= ${ch}`)
+                    let i = 5;
+                    while(ch !== "\"") {
+                        src = src + ch;
+                        i++;
+                        ch = solution.substring(solution.indexOf("src=\"")+i,solution.indexOf("src=\"")+i+1);
+                    }
+                    console.log(src)
+    
+                    imagesAns[imgAnsN] = src;
+                    solution = solution.replace(solution.substring(start,end+2),`@@${imgAnsN}@@`)
+                    imgAnsN++;
+                    console.log(solution)
+                }
+    
+                solution = solution.replace(/&nbsp;/g," ")
+                solution = solution.replace(/=/g,"##61##")
+                solution = solution.replace(/&gt;/g,"##62##")
+                solution = solution.replace(/&lt;/g,"##63##")
+                solution = solution.replace(/&amp;/g,"and")
+            }
+
             console.log("Question: " + question);
             console.log("Column 1")
             COL1TEXT.map(col => {
@@ -177,7 +248,9 @@ class Match extends Component {
                     tags: this.props.tags,
                     images: images,
                     matchAnswer: this.state.answers,
-                    imagesAns: imagesAns
+                    imagesAns: imagesAns,
+                    hints: HINTS.length === 0?null : HINTS,
+                    solution: solution || null
                 }
             axios({
                 method: 'POST',
@@ -335,6 +408,39 @@ class Match extends Component {
         clearInterval(this.state.id)
     }
 
+    handleHints = (model,e) => {
+        let tmpOptions = this.state.hints;
+        let i = tmpOptions.indexOf(parseInt(e,10));
+        let tmpOptionsText = this.state.hintsText;
+        tmpOptionsText[i] = model;
+        this.setState({hintsText: tmpOptionsText})
+    }
+
+    addHint = () => {
+        let builder = document.querySelector('#builder');        
+        let tmpOptions = this.state.hints;
+        let tmpNOptions = this.state.nHints;
+        tmpNOptions++;
+        tmpOptions.push(tmpNOptions);
+        let tmpOptionsText = this.state.hintsText;
+        tmpOptionsText.push("");
+        this.setState({hints: tmpOptions, nHints: tmpNOptions,hintsText: tmpOptionsText},() => {
+            builder.scrollTop = builder.scrollHeight;
+        });
+    }
+
+    removeHint = (i) => {
+        let tmpOptions = this.state.hints;
+        let tmpNOptions = this.state.nHints;
+        tmpNOptions--;
+        let tmpOptionsText = this.state.hintsText;
+        tmpOptionsText.pop();
+        if(tmpOptions.length>1) {
+            tmpOptions.splice(tmpOptions.indexOf(i),1);
+            this.setState({hints: tmpOptions, nHints: tmpNOptions, hintsText: tmpOptionsText});
+        }
+    }
+
     // componentDidUpdate() {
     //     this.removeWrapper();
     // }
@@ -369,6 +475,12 @@ class Match extends Component {
                         ))
                     }
                 </div>
+                <h3 style={{padding: "10px", background: "#388287", margin: "0", color: "white"}}>Hints</h3>
+                {this.state.hints.map((key,i) => (
+                    <Option model={this.state.hintsText[i]} handleOptions={this.handleHints} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addHint} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeHint} num={i+1} i={key} key={i}/>
+                ))}
+                <h3 style={{padding: "10px", background: "#388287", margin: "0", color: "white"}}>Solution</h3>
+                <Question off={true} model={this.state.solution} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={(m) => {this.setState({solution: m})}}/>
                 <div>
                     <div onClick={this.preview} className="preview">PREVIEW</div>
                 </div>

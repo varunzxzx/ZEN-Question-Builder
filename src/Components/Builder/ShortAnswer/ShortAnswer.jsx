@@ -4,6 +4,7 @@ import axios from 'axios';
 import Latex from '../Latex/Latex';
 import FroalaEditor from 'react-froala-wysiwyg';
 import {InlineTex} from 'react-tex';
+import Option from '../Option/Option.jsx'
 
 const isEmpty = (obj) => {
     console.log(obj)
@@ -23,7 +24,9 @@ class ShortAnswer extends Component {
             isLoading: false,
             type: "shortanswer",
             preview: false,
-            hints: ""
+            hints: [0],
+            nHints: 1,
+            hintsText: [""]
         }
     }
 
@@ -38,7 +41,10 @@ class ShortAnswer extends Component {
             answer: "",
             isLoading: false,
             type: "shortanswer",
-            preview: false
+            preview: false,
+            hints: [0],
+            nHints: 1,
+            hintsText: [""]
         })
         this.props.reInit()
     }
@@ -53,6 +59,39 @@ class ShortAnswer extends Component {
 
     handleAnswer = (model) => {
         this.setState({answer: model})
+    }
+
+    handleHints = (model,e) => {
+        let tmpOptions = this.state.hints;
+        let i = tmpOptions.indexOf(parseInt(e,10));
+        let tmpOptionsText = this.state.hintsText;
+        tmpOptionsText[i] = model;
+        this.setState({hintsText: tmpOptionsText})
+    }
+
+    addHint = () => {
+        let builder = document.querySelector('#builder');        
+        let tmpOptions = this.state.hints;
+        let tmpNOptions = this.state.nHints;
+        tmpNOptions++;
+        tmpOptions.push(tmpNOptions);
+        let tmpOptionsText = this.state.hintsText;
+        tmpOptionsText.push("");
+        this.setState({hints: tmpOptions, nHints: tmpNOptions,hintsText: tmpOptionsText},() => {
+            builder.scrollTop = builder.scrollHeight;
+        });
+    }
+
+    removeHint = (i) => {
+        let tmpOptions = this.state.hints;
+        let tmpNOptions = this.state.nHints;
+        tmpNOptions--;
+        let tmpOptionsText = this.state.hintsText;
+        tmpOptionsText.pop();
+        if(tmpOptions.length>1) {
+            tmpOptions.splice(tmpOptions.indexOf(i),1);
+            this.setState({hints: tmpOptions, nHints: tmpNOptions, hintsText: tmpOptionsText});
+        }
     }
 
     submit = () => {
@@ -119,6 +158,38 @@ class ShortAnswer extends Component {
             answer = answer.replace(/&gt;/g,"##62##")
             answer = answer.replace(/&lt;/g,"##63##")
             answer = answer.replace(/&amp;/g,"and")
+            let hintss = this.state.hintsText;
+            let HINTS = []
+            if(hintss) {
+                HINTS = hintss.map((option,i) => {
+                    while(option.indexOf("<img") !== -1) {
+                        let start = option.indexOf("<img");
+                        let end = option.indexOf("\">")
+                        console.log(start)
+                        console.log(end)
+                        console.log(option.substring(start,end+2))
+        
+                        let src = "",ch = option.substring(option.indexOf("src=\"")+5,option.indexOf("src=\"")+6);
+                        console.log(`ch= ${ch}`)
+                        let i = 5;
+                        while(ch !== "\"") {
+                            src = src + ch;
+                            i++;
+                            ch = option.substring(option.indexOf("src=\"")+i,option.indexOf("src=\"")+i+1);
+                        }
+                        
+                        images[imgN] = src;
+                        option = option.replace(option.substring(start,end+2),`@@${imgN}@@`)
+                        imgN++;
+                        console.log(option)
+                    }
+                    option = option.replace(/&nbsp;/g," ")
+                    option = option.replace(/=/g,"##61##")
+                    option = option.replace(/&gt;/g,"##62##")
+                    option = option.replace(/&amp;/g,"and")
+                    return option.replace(/&lt;/g,"##63##")
+                })
+            }
             if(!this.state.isLoading) {
                 const thiss = this;
                 this.setState({isLoading: true})
@@ -128,7 +199,8 @@ class ShortAnswer extends Component {
                     answer: answer,
                     images: images,
                     tags: this.props.tags,
-                    imagesAns: imagesAns
+                    imagesAns: imagesAns,
+                    hints: HINTS.length === 0?null : HINTS
                 }
             axios({
                 method: 'POST',
@@ -180,6 +252,9 @@ class ShortAnswer extends Component {
         this.removeWrapper()
     }
 
+    handleCheck = (i) => {
+    }
+
     componentWillUnmount() {
         clearInterval(this.state.id)
     }
@@ -221,6 +296,10 @@ class ShortAnswer extends Component {
                         }} tag='textarea' model={this.state.answer} onModelChange={this.handleAnswer}/>
 
                 </div>
+                <h3 style={{padding: "10px", background: "#388287", margin: "0", color: "white"}}>Hints</h3>
+                {this.state.hints.map((key,i) => (
+                    <Option model={this.state.hintsText[i]} handleOptions={this.handleHints} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addHint} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeHint} num={i+1} i={key} key={i}/>
+                ))}
                 <div>
                     <div onClick={this.preview} className="preview">PREVIEW</div>
                 </div>
