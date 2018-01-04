@@ -53,6 +53,7 @@ class Match extends Component {
             type: "match",
             preview: false
         })
+        this.props.reInit()
     }
 
     submit = () => {
