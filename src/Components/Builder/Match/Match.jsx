@@ -182,9 +182,9 @@ class Match extends Component {
                             ch = option.substring(option.indexOf("src=\"")+i,option.indexOf("src=\"")+i+1);
                         }
                         
-                        imagesAns[imgAnsN] = src;
-                        option = option.replace(option.substring(start,end+2),`@@${imgAnsN}@@`)
-                        imgAnsN++;
+                        images[imgN] = src;
+                        option = option.replace(option.substring(start,end+2),`@@${imgN}@@`)
+                        imgN++;
                         console.log(option)
                     }
                     option = option.replace(/&nbsp;/g," ")
