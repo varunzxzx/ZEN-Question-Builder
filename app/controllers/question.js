@@ -52,8 +52,7 @@ module.exports = {
                     col2: questionAttr.col2 || null,
                     matchAnswer: questionAttr.matchAnswer || null,
                     images: questionAttr.images || null,
-                    solution: questionAttr.solution ||null,
-                    matchSolution: questionAttr.solution || null
+                    solution: questionAttr.solution ||null
                 })
                     .then(questionAttr => {
                         let tagLength = tags.length;

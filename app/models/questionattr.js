@@ -54,7 +54,6 @@ module.exports = (sequelize, DataTypes) => {
         }
     },
     matchAnswer: DataTypes.JSON,
-    matchSolution: DataTypes.TEXT,
     images: {
         type: DataTypes.JSON,
         // get: function () {
