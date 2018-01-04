@@ -21,7 +21,7 @@ class MCQ extends Component {
             displayLatex: false,
             question: "",
             optionsText: ["","","",""],
-            loading: false,
+            isLoading: false,
             success: false,
             type: 'mcq',
             preview: false,
@@ -41,7 +41,7 @@ class MCQ extends Component {
             displayLatex: false,
             question: "",
             optionsText: ["","","",""],
-            loading: false,
+            isLoading: false,
             success: false,
             type: 'mcq',
             preview: false,
@@ -89,7 +89,7 @@ class MCQ extends Component {
             let options = this.state.optionsText;
             let imagesAns = {}
             let imgAnsN = 0
-            options.map((option,i) => {
+            let OPTIONS = options.map((option,i) => {
                 while(option.indexOf("<img") !== -1) {
                     let start = option.indexOf("<img");
                     let end = option.indexOf("\">")
@@ -111,10 +111,10 @@ class MCQ extends Component {
                     imgAnsN++;
                     console.log(option)
                 }
-                options[i] = option.replace(/&nbsp;/g," ")
-                options[i] = options[i].replace(/=/g,"##61##")
-                options[i] = options[i].replace(/&gt;/g,"##62##")
-                options[i] = options[i].replace(/&lt;/g,"##63##")
+                option = option.replace(/&nbsp;/g," ")
+                option = option.replace(/=/g,"##61##")
+                option = option.replace(/&gt;/g,"##62##")
+                return option.replace(/&lt;/g,"##63##")
             })
             
             this.state.checked.map((checked,i) => {
@@ -122,14 +122,15 @@ class MCQ extends Component {
                     correct.push(this.state.options.indexOf(checked))
                 }
             })
+            console.log(OPTIONS)
             console.log(images)
-            if(!this.state.loading) {
+            if(!this.state.isLoading) {
                 const thiss = this;
-                this.setState({loading: true})
+                this.setState({isLoading: true})
                 const payload = {
                     question: question,
                     type: this.state.type,
-                    options: options,
+                    options: OPTIONS,
                     correct: correct,
                     tags: this.props.tags,
                     images: images,
@@ -149,8 +150,8 @@ class MCQ extends Component {
                     thiss.reInit()
                 })
                 .catch(function (error) {
-                    thiss.setState({loading: false})
                     console.log(error)
+                    thiss.setState({isLoading: false})
                     alert("Something went wrong");
                 });
             }
@@ -271,13 +272,11 @@ class MCQ extends Component {
                         <div className="question"><InlineTex texContent={this.state.question}/></div>
                         <div style={{textAlign: "center"}}><b>Options</b></div>
                         {this.state.optionsText.map((option,i) => {
-                            option = option.replace(/##62##/g,">")
-                            option = option.replace(/##63##/g,"<")
                             return (<div key={i} className={`option${i}`}><b>{i+1}.</b> <InlineTex texContent={option}/></div>)
                         })}
                         <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
                         <div>
-                            <div onClick={this.submit} className="submit" disabled>{this.state.loading?"WAIT" : "SUBMIT"}</div>
+                            <div onClick={this.submit} className="submit" disabled>{this.state.isLoading?"WAIT" : "SUBMIT"}</div>
                         </div>
                     </div>}
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}

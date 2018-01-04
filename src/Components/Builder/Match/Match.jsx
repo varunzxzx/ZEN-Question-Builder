@@ -32,11 +32,27 @@ class Match extends Component {
             col1Text: ["","",""],
             col2Text: ["","",""],
             answers: {},
-            loading: false,
+            isLoading: false,
             type: "match",
-            preview: false,
-            id: 1
+            preview: false
         }
+    }
+
+    reInit = () => {
+        this.setState({
+            displayLatex: false,
+            column1: [0,1,2],
+            nCol1:3,
+            column2: [0,1,2],
+            nCol2: 3,
+            question: "",
+            col1Text: ["","",""],
+            col2Text: ["","",""],
+            answers: {},
+            isLoading: false,
+            type: "match",
+            preview: false
+        })
     }
 
     submit = () => {
@@ -76,7 +92,7 @@ class Match extends Component {
             let imagesAns = {}
             let imgAnsN = 0
             let col1Text = this.state.col1Text;
-            col1Text.map((option,i) => {
+            let COL1TEXT = col1Text.map((option,i) => {
                 while(option.indexOf("<img") !== -1) {
                     let start = option.indexOf("<img");
                     let end = option.indexOf("\">")
@@ -98,13 +114,13 @@ class Match extends Component {
                     imgAnsN++;
                     console.log(option)
                 }
-                col1Text[i] = option.replace(/&nbsp;/g," ")
-                col1Text[i] = col1Text[i].replace(/=/g,"##61##")
-                col1Text[i] = col1Text[i].replace(/&gt;/g,"##62##")
-                col1Text[i] = col1Text[i].replace(/&lt;/g,"##63##")
+                option = option.replace(/&nbsp;/g," ")
+                option = option.replace(/=/g,"##61##")
+                option = option.replace(/&gt;/g,"##62##")
+                return option.replace(/&lt;/g,"##63##")
             })
             let col2Text = this.state.col2Text;
-            col2Text.map((option,i) => {
+            let COL2TEXT = col2Text.map((option,i) => {
                 while(option.indexOf("<img") !== -1) {
                     let start = option.indexOf("<img");
                     let end = option.indexOf("\">")
@@ -126,29 +142,29 @@ class Match extends Component {
                     imgAnsN++;
                     console.log(option)
                 }
-                col2Text[i] = option.replace(/&nbsp;/g," ")
-                col2Text[i] = col2Text[i].replace(/=/g,"##61##")
-                col2Text[i] = col2Text[i].replace(/&gt;/g,"##62##")
-                col2Text[i] = col2Text[i].replace(/&lt;/g,"##63##")
+                option = option.replace(/&nbsp;/g," ")
+                option = option.replace(/=/g,"##61##")
+                option = option.replace(/&gt;/g,"##62##")
+                return option.replace(/&lt;/g,"##63##")
             })
             console.log("Question: " + question);
             console.log("Column 1")
-            col1Text.map(col => {
+            COL1TEXT.map(col => {
                 console.log(col)
             })
             console.log("Column 2")
-            col2Text.map(col => {
+            COL2TEXT.map(col => {
                 console.log(col)
             })
             console.log(this.state.answers)
-            if(!this.state.loading) {
+            if(!this.state.isLoading) {
                 const thiss = this;
-                this.setState({loading: true})
+                this.setState({isLoading: true})
                 const payload = {
                     question: question,
                     type: this.state.type,
-                    col1: col1Text,
-                    col2: col2Text,
+                    col1: COL1TEXT,
+                    col2: COL2TEXT,
                     tags: this.props.tags,
                     images: images,
                     matchAnswer: this.state.answers,
@@ -165,10 +181,10 @@ class Match extends Component {
                 })
                 .then(function (response) {
                     alert("Posted successfully")
-                    location.reload()
+                    thiss.reInit()
                 })
                 .catch(function (error) {
-                    thiss.setState({loading: false})
+                    thiss.setState({isLoading: false})
                     alert("Something went wrong");
                 });
             }
@@ -330,7 +346,7 @@ class Match extends Component {
                     </div>
                     <div className="col2">
                     {this.state.column2.map((key,i) => (
-                        <Option model={this.state.col1Text[i]} num={i+1} showNum={true} handleOptions={this.handleCol2} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addColumn2} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeColumn2} i={key} key={key}/>
+                        <Option model={this.state.col2Text[i]} num={i+1} showNum={true} handleOptions={this.handleCol2} col={21} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addColumn2} handleCheck={this.handleCheck} checked={[]} removeOption={this.removeColumn2} i={key} key={key}/>
                     ))}
                     </div>
                 </div>
@@ -365,7 +381,7 @@ class Match extends Component {
                         </div>
                         <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
                         <div>
-                            <div onClick={this.submit} className="submit">{this.state.loading?"WAIT" : "SUBMIT"}</div>
+                            <div onClick={this.submit} className="submit">{this.state.isLoading?"WAIT" : "SUBMIT"}</div>
                         </div>
                     </div>}
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}

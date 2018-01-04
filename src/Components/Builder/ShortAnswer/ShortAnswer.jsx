@@ -20,7 +20,7 @@ class ShortAnswer extends Component {
             displayLatex: false,
             question: "",
             answer: "",
-            loading: false,
+            isLoading: false,
             type: "shortanswer",
             preview: false
         }
@@ -31,7 +31,7 @@ class ShortAnswer extends Component {
             displayLatex: false,
             question: "",
             answer: "",
-            loading: false,
+            isLoading: false,
             type: "shortanswer",
             preview: false
         })
@@ -112,9 +112,9 @@ class ShortAnswer extends Component {
             answer = answer.replace(/=/g,"##61##")
             answer = answer.replace(/&gt;/g,"##62##")
             answer = answer.replace(/&lt;/g,"##63##")
-            if(!this.state.loading) {
+            if(!this.state.isLoading) {
                 const thiss = this;
-                this.setState({loading: true})
+                this.setState({isLoading: true})
                 const payload = {
                     question: question,
                     type: this.state.type,
@@ -137,7 +137,6 @@ class ShortAnswer extends Component {
                     location.reload()
                 })
                 .catch(function (error) {
-                    thiss.setState({loading: false})
                     alert("Something went wrong");
                 });
             }
@@ -225,7 +224,7 @@ class ShortAnswer extends Component {
                         <div className="answer"><InlineTex texContent={this.state.answer}/></div>
                         <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
                         <div>
-                            <div onClick={this.submit} className="submit">{this.state.loading?"WAIT" : "SUBMIT"}</div>
+                            <div onClick={this.submit} className="submit">{this.state.isLoading?"WAIT" : "SUBMIT"}</div>
                         </div>
                     </div>}
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}
