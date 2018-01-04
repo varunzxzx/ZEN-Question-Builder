@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     hints: {
         type: DataTypes.STRING,
         get: function () {
-            if(this.getDataValue('hints')) return this.getDataValue('options').split(';;')
+            if(this.getDataValue('hints')) return this.getDataValue('hints').split(';;')
         },
         set: function (val) {
             if(val) {
