@@ -1,5 +1,7 @@
 const express = require('express');
 let router = express.Router();
+const multer = require('multer');
+const path = require('path')
 const QuestionController = require('./controllers').Question
 const TagsController = require('./controllers').Tags
 const upload = require('./routes/upload');
@@ -69,5 +71,56 @@ router.post('/create',(req,res) => {
 })
 
 router.post('/upload', upload);
+
+const storage = multer.diskStorage({
+    destination: './public/uploads/',
+    filename: function(req, file, cb){
+        cb(null,file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+function checkFileType(file, cb){
+    // Allowed ext
+    const filetypes = /pdf/;
+    // Check ext
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    // Check mime
+    const mimetype = filetypes.test(file.mimetype);
+
+    if(mimetype && extname){
+        return cb(null,true);
+    } else {
+        cb('Error: Pdfs Only!');
+    }
+}
+
+const uploadFile = multer({
+    storage: storage,
+    limits:{fileSize: 10000000000},
+    fileFilter: function(req, file, cb){
+        checkFileType(file, cb);
+    }
+}).single('pdf');
+
+router.post('/upload_file',(req,res) => {
+    uploadFile(req, res, (err) => {
+        if(err){
+            return res.status(500).json({
+                msg: err
+            });
+        } else {
+            if(req.file == undefined){
+                res.status(500).json({
+                    msg: 'Error: No File Selected!'
+                });
+            } else {
+                res.status(200).json({
+                    msg: 'File Uploaded!',
+                    file: `uploads/${req.file.filename}`
+                });
+            }
+        }
+    });
+})
 
 module.exports = router;

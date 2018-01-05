@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 class Pdf extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            display: true,
-            src: "",
+            display: false,
+            src: "uploads/Arihant Physics electrostatics.pdf",
         }
     }
 
@@ -13,24 +14,28 @@ class Pdf extends Component{
     }
 
     changeFile = () => {
+        const thiss = this;
         console.log("changing file now...")
         var preview = document.querySelector('#myIframe');
         var file    = document.querySelector('#fileInput').files[0];
-        this.setState({file})
-        // var reader  = new FileReader();
-        // console.log(preview)
-        // console.log(file)
-        // console.log(reader)
-        // let thiss = this;
-        // reader.onloadend = function () {
-        //     thiss.setState({src: reader.result})
-        // }
- 
-        // if (file) {
-        //     reader.readAsDataURL(file);
-        // } else {
-        //     preview.src = "";
-        // }
+        var formData = new FormData();
+        formData.append("pdf", file);
+        axios.post('api/upload_file', formData, {
+            headers: {
+            'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(function (response) {
+            console.log(response.data)
+            thiss.setState({src: response.data.file})
+        })
+        .catch(function (error) {
+            console.log("error");
+        });
+    }
+
+    handlePdf = (e) => {
+        this.setState({src: e.target.value})
     }
 
     render() {
@@ -65,11 +70,15 @@ class Pdf extends Component{
                 file={this.state.file}
                 error={"fail to load"}>
             </Document> */}
-                <iframe id="myIframe" style={styles.iframe} title="pdf" src={"http://projekty.wojtekmaj.pl/react-pdf/"} frameBorder="0" />
-                {/* <div style={styles.change}>
-                    <img onClick={this.handleChange} style={styles.img} src="assets/change.png" alt="Change"/>
-                    <input id="fileInput" style={styles.input} type="file"/>
-                </div> */}
+                <iframe id="myIframe" style={styles.iframe} title="pdf" src={this.state.src} frameBorder="0" />
+                <div style={styles.change}>
+                    <img id="change" onClick={this.handleChange} style={styles.img} src="assets/change.png" alt="Change"/>
+                    <input id="fileInput" onChange={this.changeFile} style={styles.input} type="file"/>
+                    <select value={this.state.src} onChange={this.handlePdf} style={styles.input} name="file-name" id="">
+                        <option value="uploads/Arihant Physics electrostatics.pdf">Arihant Physics electrostatics</option>
+                        <option value="uploads/Fundamentals of Physics.pdf">Fundamentals of Physics</option>
+                    </select>
+                </div>
             </div>
         )
     }
