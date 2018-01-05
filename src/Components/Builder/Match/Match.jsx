@@ -98,8 +98,8 @@ class Match extends Component {
             }
             question = question.replace(/&nbsp;/g," ")
             question = question.replace(/=/g,"##61##")
-            question = question.replace(/&gt;/g,"##62##")
-            question = question.replace(/&lt;/g,"##63##")
+            question = question.replace(/&gt;/g,">")
+            question = question.replace(/&lt;/g,"<")
             question = question.replace(/&amp;/g,"and")
             let imagesAns = {}
             let imgAnsN = 0
@@ -128,9 +128,9 @@ class Match extends Component {
                 }
                 option = option.replace(/&nbsp;/g," ")
                 option = option.replace(/=/g,"##61##")
-                option = option.replace(/&gt;/g,"##62##")
+                option = option.replace(/&gt;/g,">")
                 option = option.replace(/&amp;/g,"and")
-                return option.replace(/&lt;/g,"##63##")
+                return option.replace(/&lt;/g,"<")
             })
             let col2Text = this.state.col2Text;
             let COL2TEXT = col2Text.map((option,i) => {
@@ -157,9 +157,9 @@ class Match extends Component {
                 }
                 option = option.replace(/&nbsp;/g," ")
                 option = option.replace(/=/g,"##61##")
-                option = option.replace(/&gt;/g,"##62##")
+                option = option.replace(/&gt;/g,">")
                 option = option.replace(/&amp;/g,"and")
-                return option.replace(/&lt;/g,"##63##")
+                return option.replace(/&lt;/g,"<")
             })
 
             let hintss = this.state.hintsText;
@@ -189,9 +189,9 @@ class Match extends Component {
                     }
                     option = option.replace(/&nbsp;/g," ")
                     option = option.replace(/=/g,"##61##")
-                    option = option.replace(/&gt;/g,"##62##")
+                    option = option.replace(/&gt;/g,">")
                     option = option.replace(/&amp;/g,"and")
-                    return option.replace(/&lt;/g,"##63##")
+                    return option.replace(/&lt;/g,"<")
                 })
             }
 
@@ -222,8 +222,8 @@ class Match extends Component {
     
                 solution = solution.replace(/&nbsp;/g," ")
                 solution = solution.replace(/=/g,"##61##")
-                solution = solution.replace(/&gt;/g,"##62##")
-                solution = solution.replace(/&lt;/g,"##63##")
+                solution = solution.replace(/&gt;/g,">")
+                solution = solution.replace(/&lt;/g,"<")
                 solution = solution.replace(/&amp;/g,"and")
             }
 

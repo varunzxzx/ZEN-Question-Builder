@@ -126,8 +126,8 @@ class ShortAnswer extends Component {
             }
             question = question.replace(/&nbsp;/g," ")
             question = question.replace(/=/g,"##61##")
-            question = question.replace(/&gt;/g,"##62##")
-            question = question.replace(/&lt;/g,"##63##")
+            question = question.replace(/&gt;/g,">")
+            question = question.replace(/&lt;/g,"<")
             question = question.replace(/&amp;/g,"and")
             let answer = this.state.answer;
             let imagesAns = {}
@@ -155,8 +155,8 @@ class ShortAnswer extends Component {
             }
             answer = answer.replace(/&nbsp;/g," ")
             answer = answer.replace(/=/g,"##61##")
-            answer = answer.replace(/&gt;/g,"##62##")
-            answer = answer.replace(/&lt;/g,"##63##")
+            answer = answer.replace(/&gt;/g,">")
+            answer = answer.replace(/&lt;/g,"<")
             answer = answer.replace(/&amp;/g,"and")
             let hintss = this.state.hintsText;
             let HINTS = []
@@ -185,9 +185,9 @@ class ShortAnswer extends Component {
                     }
                     option = option.replace(/&nbsp;/g," ")
                     option = option.replace(/=/g,"##61##")
-                    option = option.replace(/&gt;/g,"##62##")
+                    option = option.replace(/&gt;/g,">")
                     option = option.replace(/&amp;/g,"and")
-                    return option.replace(/&lt;/g,"##63##")
+                    return option.replace(/&lt;/g,"<")
                 })
             }
             if(!this.state.isLoading) {
