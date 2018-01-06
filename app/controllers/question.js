@@ -86,14 +86,40 @@ module.exports = {
                     as: 'questionAttrs'
                 },{
                     model: Tags,
-                    as: 'tags',
-                    through: {
-                        model: QuestionTag
-                    }
+                    as: 'tags'
                 }],
             })
             .then(todos => res.status(200).send(todos))
             .catch(error => {console.log(error);return res.status(400).send(error)});
+    },
+    update(question_id,question, questionAttr, tags, res) {
+        return Question.findById(question_id)
+        .then(todo => {
+            todo.destroy().catch(error => {throw error});
+        })
+        .then(() => {
+            Question
+                .create(question)
+                .then(question => {
+                    QuestionAttr.create({
+                        question_id: question.id,
+                        options: questionAttr.options || null,
+                        correct: questionAttr.correct || null,
+                        answer: questionAttr.answer || null,
+                        col1: questionAttr.col1 || null,
+                        col2: questionAttr.col2 || null,
+                        matchAnswer: questionAttr.matchAnswer || null,
+                        images: questionAttr.images || null,
+                        solution: questionAttr.solution ||null
+                    })
+                        .then(questionAttr => {
+                            let tagLength = tags.length;
+                            addTags(0,questionAttr.question_id,tags,() => res.status(201).json({success: true,msg: "Successfully posted"}))
+                        })
+                })
+                .catch(error => {console.log(error);throw error});
+        })
+        .catch(err => res.status(500).send(err))
     },
     delete(id,res) {
         return Question

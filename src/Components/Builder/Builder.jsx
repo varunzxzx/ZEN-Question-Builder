@@ -27,6 +27,10 @@ class Builder extends Component{
         }
     }
 
+    handleTags = (e) => {
+        this.setState({tags: e})
+    }
+
     reInit = () => {
         this.setState({tags: []})
     }
@@ -151,7 +155,7 @@ class Builder extends Component{
                 {this.state.selectedType === "MCQ" && <MCQ tags={this.state.tags} reInit={this.reInit}/>}
                 {this.state.selectedType === "Short Answer" && <ShortAnswer tags={this.state.tags} reInit={this.reInit}/>}
                 {this.state.selectedType === "Match the Following" && <Match tags={this.state.tags} reInit={this.reInit}/>}
-                {this.state.selectedType === "Update Questions" && <Update tags={this.state.tags} reInit={this.reInit}/>}
+                {this.state.selectedType === "Update Questions" && <Update handleTags={this.handleTags} tags={this.state.tags} reInit={this.reInit}/>}
                 </div>
                 }
             </div>

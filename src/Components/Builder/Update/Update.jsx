@@ -3,6 +3,7 @@ import Question from '../Question/Question';
 import Option from '../Option/Option';
 import Latex from '../Latex/Latex';
 import axios from 'axios';
+import autoComplete from '../auto-complete.min.js';
 import {InlineTex} from 'react-tex';
 const isEmpty = (obj) => {
     for(var key in obj) {
@@ -27,7 +28,14 @@ class MCQ extends Component {
             preview: false,
             hints: [0],
             nHints: 1,
-            hintsText: [""]
+            hintsText: [""],
+            Loading: true,
+            questionList: [],
+            solution: "",
+            selected: {},
+            id: 0,
+            taglist: [],
+            dummy: ["hi","hello","<p>fgdfgdf##62##</p>"]
         }
     }
 
@@ -40,27 +48,136 @@ class MCQ extends Component {
     }
 
     componentWillMount() {
-        
+        const thiss = this;
+        axios({
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+                url: '/api/listtags',
+                mode: 'cors',
+                data: JSON.stringify({type: "mcq"})
+            })
+            .then(function (response) {
+                thiss.setState({questionList: response.data, taglist: response.data.map(obj => obj.question), Loading: false},() => {
+                    thiss.populate(0)
+                })
+            })
+            .catch(function (error) {
+                console.log(error)
+                thiss.setState({Loading: false})
+                alert("Something went wrong");
+            });
+    }
+
+    populate = (i) => {
+        let question = this.state.questionList[i].question;
+        let value = question
+        while(value.indexOf("@@") !== -1) {
+            let key = value[value.indexOf("@@")+2];
+            let i=3;
+            while(value[value.indexOf("@@")+i] !== '@') {
+            key = key + value[value.indexOf("@@")+i];
+            i++;
+            }
+            console.log(key)
+            let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="http://34.216.139.152:3000/${images[key]}" alt=""/>`)
+            value = img;
+        }
+        question = value.replace(/##61##/g,"=");
+
+        let options = [];
+        let optionsText = [];
+        let nOptions = 0
+        this.state.questionList[i].questionAttrs[0].options.map((option,i) => {
+            options.push(i);
+            value = option
+            while(value.indexOf("@@") !== -1) {
+                let key = value[value.indexOf("@@")+2];
+                let i=3;
+                while(value[value.indexOf("@@")+i] !== '@') {
+                key = key + value[value.indexOf("@@")+i];
+                i++;
+                }
+                console.log(key)
+                let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="http://34.216.139.152:3000/${images[key]}" alt=""/>`)
+                value = img;
+            }
+            option = value.replace(/##61##/g,"=")
+            optionsText.push(option)
+            nOptions++;
+        })
+        let hints = [0];
+        let hintsText = [""];
+        let nHints = 1
+        if(this.state.questionList[i].questionAttrs[0].hints) {
+            this.state.questionList[i].questionAttrs[0].hints.map((option,i) => {
+                hints.push(i+1);
+                value = option
+                while(value.indexOf("@@") !== -1) {
+                    let key = value[value.indexOf("@@")+2];
+                    let i=3;
+                    while(value[value.indexOf("@@")+i] !== '@') {
+                    key = key + value[value.indexOf("@@")+i];
+                    i++;
+                    }
+                    console.log(key)
+                    let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="http://34.216.139.152:3000/${images[key]}" alt=""/>`)
+                    value = img;
+                }
+                option = value.replace(/##61##/g,"=")
+                hintsText.push(option)
+                nHints++;
+            })
+        }
+        let solution = this.state.questionList[i].questionAttrs[0].solution || "";
+        this.props.handleTags(this.state.questionList[i].tags.map(obj => obj.tag))
+        let checked = this.state.questionList[i].questionAttrs[0].correct.map(correct => parseInt(correct))
+        let id = this.state.questionList[i].id
+        let selected = {
+            question,
+            options,
+            optionsText,
+            nOptions,
+            hints,
+            hintsText,
+            nHints,
+            checked,
+            id
+        }
+        this.setState({
+            question,
+            options,
+            optionsText,
+            nOptions,
+            hints,
+            hintsText,
+            nHints,
+            selected,
+            checked,
+            id
+        })
     }
 
     reInit = () => {
-        this.setState({
-            checked: [],
-            options: [0,1,2,3],
-            nOptions: 4,
-            displayLatex: false,
-            question: "",
-            optionsText: ["","","",""],
-            isLoading: false,
-            success: false,
-            type: 'mcq',
-            preview: false,
-            hints: [0],
-            nHints: 1,
-            hintsText: [""],
-            solution: ""
-        })
-        this.props.reInit()
+        // this.setState({
+        //     checked: [],
+        //     options: [0,1,2,3],
+        //     nOptions: 4,
+        //     displayLatex: false,
+        //     question: "",
+        //     optionsText: ["","","",""],
+        //     isLoading: false,
+        //     success: false,
+        //     type: 'mcq',
+        //     preview: false,
+        //     hints: [0],
+        //     nHints: 1,
+        //     hintsText: [""],
+        //     solution: ""
+        // })
+        // this.props.reInit()
+        location.reload()
     }
 
     submit = () => {
@@ -71,7 +188,7 @@ class MCQ extends Component {
             let question = this.state.question;
             let images = {};
             let imgN = 0;
-
+            let id = this.state.selected.id
             while(question.indexOf("<img") !== -1) {
                 let start = question.indexOf("<img");
                 let end = question.indexOf("\">")
@@ -209,6 +326,7 @@ class MCQ extends Component {
                 this.setState({isLoading: true})
                 const payload = {
                     question: question,
+                    question_id: id,
                     type: this.state.type,
                     options: OPTIONS,
                     correct: correct,
@@ -223,7 +341,7 @@ class MCQ extends Component {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                    url: '/api/create',
+                    url: '/api/update',
                     mode: 'cors',
                     data: JSON.stringify(payload)
                 })
@@ -361,6 +479,38 @@ class MCQ extends Component {
     }
 
     componentDidUpdate() {
+        let taglist = this.state.taglist;
+        console.log(taglist)
+        console.log("Builder updated..")
+        new autoComplete({
+            selector: '#hero',
+            minChars: 1,
+            source: function(term, suggest){
+                term = term.toLowerCase();
+                var choices = taglist;
+                var suggestions = [];
+                for (let i=0;i<choices.length;i++)
+                    if (~choices[i].toLowerCase().indexOf(term)) suggestions.push(choices[i]);
+                suggest(suggestions);
+            },
+            onSelect: (event, term, item) => {
+                term = term.toLowerCase()
+                if(event.key !== "Enter") {
+                    document.querySelector('#hero').value = "";
+                    let elements = document.querySelectorAll('.autocomplete-suggestion')
+                    console.log(elements)
+                    if(!isEmpty(elements)) {
+                        for (let key in elements) {
+                            try {
+                                elements[key].parentNode.removeChild(elements[key]);
+                            } catch(err) {
+                                // do nothing
+                            }
+                        }
+                    }
+                }
+            }
+        })
         this.removeWrapper()
     }
 
@@ -384,7 +534,11 @@ class MCQ extends Component {
     render() {
         return(
             <div>
-                <Question model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
+                <div id="tags">
+                    <input id="hero" type="text" name="q" placeholder="Search questions..." />
+                </div>
+                { !this.state.Loading && <div>
+                    <Question model={this.state.question} handleLatexDisplay={this.handleLatexDisplay} handleTextChange={this.handleTextChange}/>
                 <h3 style={{padding: "10px", background: "#388287", margin: "0", color: "white"}}>Choices</h3>
                 {this.state.options.map((key,i) => (
                     <Option model={this.state.optionsText[i]} handleOptions={this.handleOptions} handleLatexDisplay={this.handleLatexDisplay} addOption={this.addOption} handleCheck={this.handleCheck} checked={this.state.checked} removeOption={this.removeOption} num={i+1} i={key} key={key}/>
@@ -398,6 +552,7 @@ class MCQ extends Component {
                 <div>
                     <div className="preview" onClick={this.preview}>PREVIEW</div>
                 </div>
+                    </div>}
                 {this.state.preview && <div className="preview-display">
                         <div style={{textAlign: "center"}}><b>Question</b></div>
                         <div className="question"><InlineTex texContent={this.state.question}/></div>
@@ -407,7 +562,7 @@ class MCQ extends Component {
                         })}
                         <img onClick={() => {this.setState({preview: false})}} src="assets/cross.png" style={{position: "absolute", top: "5px", right: "10px", width: "28px", height: "28px", cursor: "pointer"}} alt="Close"/>
                         <div>
-                            <div onClick={this.submit} className="submit" disabled>{this.state.isLoading?"WAIT" : "SUBMIT"}</div>
+                            <div onClick={this.submit} className="submit" disabled>{this.state.isLoading?"WAIT" : "UPDATE"}</div>
                         </div>
                     </div>}
                 {this.state.displayLatex && <Latex handleLatexDisplay={this.handleLatexDisplay}/>}

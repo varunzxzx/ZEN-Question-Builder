@@ -78,6 +78,40 @@ router.post('/create',(req,res) => {
     return QuestionController.create(question, questionAttr, tags, res);
 })
 
+router.post('/update',(req,res) => {
+    if(!req.body.question || !req.body.type || !req.body.tags.length) {
+        console.log("returning")
+        console.log(req.body)
+        return res.status(401).json({success: false, msg: "Missing fields", req: req.body})
+    }
+    console.log(req.body)
+    const question = {
+        question: req.body.question,
+        type: req.body.type,
+        images: req.body.images || null,
+        hints: req.body.hints || null
+    }
+    let questionAttr = {}
+    if(question.type === "mcq") {
+        if(!req.body.options.length || !req.body.correct.length) return res.status(401).json({success: false, msg: "Missing fields"})
+        questionAttr.options = req.body.options;
+        questionAttr.correct = req.body.correct;
+        questionAttr.solution = req.body.solution || null;
+    } else if(question.type === "shortanswer") {
+        if(!req.body.answer) return res.status(401).json({success: false, msg: "Missing fields"})
+        questionAttr.answer = req.body.answer
+    } else {
+        if(!req.body.col1.length || !req.body.col2.length) return res.status(402).json({success: false, msg: "Missing fields"})
+        questionAttr.col1 = req.body.col1;
+        questionAttr.col2 = req.body.col2;
+        questionAttr.matchAnswer = req.body.matchAnswer
+    }
+    questionAttr.images = req.body.imagesAns
+    const tags = req.body.tags;
+    // return res.status(200).json({success: true, msg: "Abhi tk thk h", data: data})
+    return QuestionController.update(req.body.question_id,question, questionAttr, tags, res);
+})
+
 router.post('/upload', upload);
 
 const storage = multer.diskStorage({
