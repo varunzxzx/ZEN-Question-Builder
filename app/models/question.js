@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: true
     },
     hints: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         get: function () {
             if(this.getDataValue('hints')) return this.getDataValue('hints').split(';;')
         },

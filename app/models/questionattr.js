@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   var QuestionAttr = sequelize.define('QuestionAttr', {
     options: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         get: function () {
             if(this.getDataValue('options')) return this.getDataValue('options').split(';;')
         },
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     answer: DataTypes.TEXT,
     col1: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         get: function () {
             if(this.getDataValue('col1')) return this.getDataValue('col1').split(';;')
         },
@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         }
     },
     col2: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         get: function () {
             if(this.getDataValue('col2')) return this.getDataValue('col2').split(';;')
         },
