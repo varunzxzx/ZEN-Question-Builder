@@ -56,7 +56,7 @@ module.exports = {
                 })
                     .then(questionAttr => {
                         let tagLength = tags.length;
-                        addTags(0,questionAttr.id,tags,() => res.status(201).json({success: true,msg: "Successfully posted"}))
+                        addTags(0,questionAttr.question_id,tags,() => res.status(201).json({success: true,msg: "Successfully posted"}))
                     })
             })
             .catch(error => {console.log(error)});
@@ -70,6 +70,26 @@ module.exports = {
                 include: [{
                     model: QuestionAttr,
                     as: 'questionAttrs',
+                }],
+            })
+            .then(todos => res.status(200).send(todos))
+            .catch(error => {console.log(error);return res.status(400).send(error)});
+    },
+    listtags(req,res) {
+        return Question
+            .findAll({
+                where: {
+                    type: req.body.type,
+                },
+                include: [{
+                    model: QuestionAttr,
+                    as: 'questionAttrs'
+                },{
+                    model: Tags,
+                    as: 'tags',
+                    through: {
+                        model: QuestionTag
+                    }
                 }],
             })
             .then(todos => res.status(200).send(todos))

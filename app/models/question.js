@@ -33,10 +33,7 @@ module.exports = (sequelize, DataTypes) => {
      Question.belongsToMany(models.Tags, {
          through: {
              model: models.QuestionTag,
-             unique: false,
-             scope: {
-                 taggable: 'post'
-             }
+             unique: false
          },
          as: 'tags',
          foreignKey: 'question_id',

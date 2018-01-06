@@ -3,6 +3,7 @@ import autoComplete from './auto-complete.min.js';
 import MCQ from './MCQ/MCQ';
 import ShortAnswer from './ShortAnswer/ShortAnswer'
 import Match from './Match/Match';
+import Update from './Update/Update'
 import axios from 'axios';
 
 const isEmpty = (obj) => {
@@ -17,7 +18,7 @@ class Builder extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            types: ["MCQ","Short Answer","Match the Following"],
+            types: ["MCQ","Short Answer","Match the Following","Update Questions"],
             src: "",
             tags: [],
             taglist: [],
@@ -150,6 +151,7 @@ class Builder extends Component{
                 {this.state.selectedType === "MCQ" && <MCQ tags={this.state.tags} reInit={this.reInit}/>}
                 {this.state.selectedType === "Short Answer" && <ShortAnswer tags={this.state.tags} reInit={this.reInit}/>}
                 {this.state.selectedType === "Match the Following" && <Match tags={this.state.tags} reInit={this.reInit}/>}
+                {this.state.selectedType === "Update Questions" && <Update tags={this.state.tags} reInit={this.reInit}/>}
                 </div>
                 }
             </div>

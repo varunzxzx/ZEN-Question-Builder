@@ -36,6 +36,14 @@ router.post('/list',(req,res) => {
     return QuestionController.list(req,res);
 })
 
+router.post('/listtags',(req,res) => {
+    if(!req.body.type) {
+        console.log("returning")
+        return res.status(401).json({success: false, msg: "Missing fields"})
+    }
+    return QuestionController.listtags(req,res);
+})
+
 router.post('/create',(req,res) => {
     if(!req.body.question || !req.body.type || !req.body.tags.length) {
         console.log("returning")
