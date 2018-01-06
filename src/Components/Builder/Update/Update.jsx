@@ -71,6 +71,8 @@ class MCQ extends Component {
     }
 
     populate = (i) => {
+        let qImages = this.state.questionList[i].images;
+        let oImages = this.state.questionList[i].questionAttrs[0].images;
         let question = this.state.questionList[i].question;
         let value = question
         while(value.indexOf("@@") !== -1) {
@@ -81,7 +83,7 @@ class MCQ extends Component {
             i++;
             }
             console.log(key)
-            let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="http://34.216.139.152:3000/${images[key]}" alt=""/>`)
+            let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${qImages[key]}" alt=""/>`)
             value = img;
         }
         question = value.replace(/##61##/g,"=");
@@ -100,7 +102,7 @@ class MCQ extends Component {
                 i++;
                 }
                 console.log(key)
-                let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="http://34.216.139.152:3000/${images[key]}" alt=""/>`)
+                let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${oImages[key]}" alt=""/>`)
                 value = img;
             }
             option = value.replace(/##61##/g,"=")
@@ -122,7 +124,7 @@ class MCQ extends Component {
                     i++;
                     }
                     console.log(key)
-                    let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="http://34.216.139.152:3000/${images[key]}" alt=""/>`)
+                    let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${qImages[key]}" alt=""/>`)
                     value = img;
                 }
                 option = value.replace(/##61##/g,"=")
@@ -482,6 +484,15 @@ class MCQ extends Component {
         let taglist = this.state.taglist;
         console.log(taglist)
         console.log("Builder updated..")
+        const navigate = (e) => {
+            console.log(e)
+            for(let i=0; i<this.state.questionList.length; i++) {
+                if(this.state.questionList[i].question === e) {
+                    this.populate(i)
+                    break;
+                }
+            }
+        }
         new autoComplete({
             selector: '#hero',
             minChars: 1,
@@ -498,6 +509,7 @@ class MCQ extends Component {
                 if(event.key !== "Enter") {
                     document.querySelector('#hero').value = "";
                     let elements = document.querySelectorAll('.autocomplete-suggestion')
+                    navigate(term)
                     console.log(elements)
                     if(!isEmpty(elements)) {
                         for (let key in elements) {
@@ -534,7 +546,7 @@ class MCQ extends Component {
     render() {
         return(
             <div>
-                <div id="tags">
+                <div>
                     <input id="hero" type="text" name="q" placeholder="Search questions..." />
                 </div>
                 { !this.state.Loading && <div>

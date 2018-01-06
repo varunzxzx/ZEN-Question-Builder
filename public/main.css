@@ -44,6 +44,10 @@
 #taglist {
     text-transform: uppercase;
 }
+
+#hero {
+    width: 100% !important;
+}
   
 #hero-demo,#hero {
     height: 30px;
