@@ -33,7 +33,7 @@ class Option extends Component {
                             height: 100,
                             placeholderText: '',
                             imageUploadURL: '/api/upload',
-                            htmlAllowedTags: ['svg','g','text'],
+                            htmlAllowedTags: ['svg','g','text','img'],
                             charCounterCount: false,
                             toolbarButtons: ['bold', 'italic', 'underline','insertImage','subscript', 'superscript', 'align','fontSize','color','|','undo','redo']
                         }} tag='textarea' model={this.props.model} onModelChange={(model) => {this.props.handleOptions(model,this.props.i)}}/>

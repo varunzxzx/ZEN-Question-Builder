@@ -17,11 +17,11 @@ class MCQ extends Component {
         super(props);
         this.state = {
             checked: [],
-            options: [0,1,2,3],
-            nOptions: 4,
+            options: [],
+            nOptions: 0,
             displayLatex: false,
             question: "",
-            optionsText: ["","","",""],
+            optionsText: [],
             isLoading: false,
             success: false,
             type: 'mcq',
@@ -34,8 +34,7 @@ class MCQ extends Component {
             solution: "",
             selected: {},
             id: 0,
-            taglist: [],
-            dummy: ["hi","hello","<p>fgdfgdf##62##</p>"]
+            taglist: []
         }
     }
 
@@ -109,12 +108,12 @@ class MCQ extends Component {
             optionsText.push(option)
             nOptions++;
         })
-        let hints = [0];
-        let hintsText = [""];
-        let nHints = 1
-        if(this.state.questionList[i].questionAttrs[0].hints) {
-            this.state.questionList[i].questionAttrs[0].hints.map((option,i) => {
-                hints.push(i+1);
+        let hints = [];
+        let hintsText = [];
+        let nHints = 0
+        if(this.state.questionList[i].hints) {
+            this.state.questionList[i].hints.map((option,i) => {
+                hints.push(i);
                 value = option
                 while(value.indexOf("@@") !== -1) {
                     let key = value[value.indexOf("@@")+2];
@@ -124,13 +123,17 @@ class MCQ extends Component {
                     i++;
                     }
                     console.log(key)
-                    let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${qImages[key]}" alt=""/>`)
+                    let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${qImages[key]}"" alt=""/>`)
                     value = img;
                 }
                 option = value.replace(/##61##/g,"=")
                 hintsText.push(option)
                 nHints++;
             })
+        }
+        if(hintsText.length === 0) {
+            hintsText = [""]
+            hints = [0]
         }
         let solution = this.state.questionList[i].questionAttrs[0].solution || "";
         this.props.handleTags(this.state.questionList[i].tags.map(obj => obj.tag))
@@ -487,7 +490,22 @@ class MCQ extends Component {
         const navigate = (e) => {
             console.log(e)
             for(let i=0; i<this.state.questionList.length; i++) {
-                if(this.state.questionList[i].question === e) {
+                let qImages = this.state.questionList[i].images;
+                let question = this.state.questionList[i].question;
+                let value = question
+                while(value.indexOf("@@") !== -1) {
+                    let key = value[value.indexOf("@@")+2];
+                    let i=3;
+                    while(value[value.indexOf("@@")+i] !== '@') {
+                    key = key + value[value.indexOf("@@")+i];
+                    i++;
+                    }
+                    let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${qImages[key]}" alt=""/>`)
+                    value = img;
+                }
+                question = value.replace(/##61##/g,"=");
+                question = question.toLowerCase()
+                if(question === e) {
                     this.populate(i)
                     break;
                 }
@@ -510,7 +528,6 @@ class MCQ extends Component {
                     document.querySelector('#hero').value = "";
                     let elements = document.querySelectorAll('.autocomplete-suggestion')
                     navigate(term)
-                    console.log(elements)
                     if(!isEmpty(elements)) {
                         for (let key in elements) {
                             try {
