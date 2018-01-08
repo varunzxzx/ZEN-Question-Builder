@@ -517,6 +517,7 @@ class MCQ extends Component {
                 question = question.replace(/&gt;/g,">")
                 question = question.replace(/&lt;/g,"<")
                 question = question.replace(/&amp;/g,"and")
+                question = question.toLowerCase()
                 console.log(question)
                 if(question === e) {
                     this.populate(i)
