@@ -82,7 +82,7 @@ class MCQ extends Component {
             i++;
             }
             console.log(key)
-            let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${qImages[key]}" alt=""/>`)
+            let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${qImages[key]}" alt="Image">`)
             value = img;
         }
         question = value.replace(/##61##/g,"=");
@@ -101,7 +101,7 @@ class MCQ extends Component {
                 i++;
                 }
                 console.log(key)
-                let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${oImages[key]}" alt=""/>`)
+                let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${oImages[key]}" alt="Image">`)
                 value = img;
             }
             option = value.replace(/##61##/g,"=")
@@ -123,7 +123,7 @@ class MCQ extends Component {
                     i++;
                     }
                     console.log(key)
-                    let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${qImages[key]}"" alt=""/>`)
+                    let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${qImages[key]}"" alt="Image">`)
                     value = img;
                 }
                 option = value.replace(/##61##/g,"=")
@@ -186,6 +186,7 @@ class MCQ extends Component {
     }
 
     submit = () => {
+        console.log("updating...")
         if(!this.state.checked || !this.state.question || !this.state.optionsText) {
             alert("Fields missing")
         } else {
