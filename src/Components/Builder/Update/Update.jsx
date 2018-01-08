@@ -490,21 +490,34 @@ class MCQ extends Component {
         const navigate = (e) => {
             console.log(e)
             for(let i=0; i<this.state.questionList.length; i++) {
-                let qImages = this.state.questionList[i].images;
-                let question = this.state.questionList[i].question;
-                let value = question
-                while(value.indexOf("@@") !== -1) {
-                    let key = value[value.indexOf("@@")+2];
-                    let i=3;
-                    while(value[value.indexOf("@@")+i] !== '@') {
-                    key = key + value[value.indexOf("@@")+i];
-                    i++;
+                let question = this.state.questionList[i].question
+                while(question.indexOf("<img") !== -1) {
+                    let start = question.indexOf("<img");
+                    let end = question.indexOf("\">")
+                    console.log(start)
+                    console.log(end)
+                    console.log(question.substring(start,end+2))
+    
+                    let src = "",ch = question.substring(question.indexOf("src=\"")+5,question.indexOf("src=\"")+6);
+                    console.log(`ch= ${ch}`)
+                    let i = 5;
+                    while(ch !== "\"") {
+                        src = src + ch;
+                        i++;
+                        ch = question.substring(question.indexOf("src=\"")+i,question.indexOf("src=\"")+i+1);
                     }
-                    let img = value.replace(`@@${key}@@`,`<img class="question-img" style="width: 200px;" src="${qImages[key]}" alt=""/>`)
-                    value = img;
+                    console.log(src)
+    
+                    images[imgN] = src;
+                    question = question.replace(question.substring(start,end+2),`@@${imgN}@@`)
+                    imgN++;
                 }
-                question = value.replace(/##61##/g,"=");
-                question = question.toLowerCase()
+                question = question.replace(/&nbsp;/g," ")
+                question = question.replace(/=/g,"##61##")
+                question = question.replace(/&gt;/g,">")
+                question = question.replace(/&lt;/g,"<")
+                question = question.replace(/&amp;/g,"and")
+                console.log(question)
                 if(question === e) {
                     this.populate(i)
                     break;

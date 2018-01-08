@@ -53,6 +53,10 @@ module.exports = (sequelize, DataTypes) => {
             }
         }
     },
+    question_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     matchAnswer: DataTypes.JSON,
     images: {
         type: DataTypes.JSON,
